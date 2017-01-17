@@ -1,7 +1,0 @@
-/Users/maluramichael/Development/Private/pancake/build/CMakeFiles/rebuild_cache.dir
-/Users/maluramichael/Development/Private/pancake/build/CMakeFiles/edit_cache.dir
-/Users/maluramichael/Development/Private/pancake/build/CMakeFiles/install/strip.dir
-/Users/maluramichael/Development/Private/pancake/build/CMakeFiles/install.dir
-/Users/maluramichael/Development/Private/pancake/build/CMakeFiles/list_install_components.dir
-/Users/maluramichael/Development/Private/pancake/build/CMakeFiles/install/local.dir
-/Users/maluramichael/Development/Private/pancake/build/CMakeFiles/pancake.dir
