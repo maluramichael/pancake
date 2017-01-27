@@ -21,12 +21,22 @@ FILE(GLOB HEADERS
     include/*.h
     include/Graphics/*.h
     include/Images/*.h
+    include/ImGui/*.h
+    include/UI/*.h
+    include/Game/*.h
+    include/Menu/*.h
+    include/Particles/*.h
 )
 
 FILE(GLOB SOURCES 
     src/*.cpp
     src/Graphics/*.cpp
     src/Images/*.cpp
+    src/ImGui/*.cpp
+    src/UI/*.cpp
+    src/Game/*.cpp
+    src/Menu/*.cpp
+    src/Particles/*.cpp
 )
 
 ADD_LIBRARY(pancake STATIC ${SOURCES} ${HEADERS})

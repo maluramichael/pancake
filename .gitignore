@@ -29,3 +29,8 @@
 *.app
 
 # Created by .ignore support plugin (hsz.mobi)
+.idea
+build
+cmake-build-debug
+./pancake
+pancake

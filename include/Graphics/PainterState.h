@@ -6,14 +6,21 @@
 
 namespace Pancake {
 
-class PainterState {
-private:
-  Color color;
+    class PainterState {
+    private:
+        Color color;
 
-public:
-  PainterState();
-  Color getColor();
-};
+    public:
+        PainterState();
+
+        Color getColor();
+
+        void setColor(short r, short g, short b, short a);
+
+        void setColor(int color);
+
+        void setColor(Color color);
+    };
 }
 
 #endif

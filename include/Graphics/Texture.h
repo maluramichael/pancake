@@ -8,22 +8,22 @@
 
 namespace Pancake {
 
-class Texture {
-private:
-  int width = 0, height = 0;
-  SDL_Texture *texture = nullptr;
+    class Texture {
+    private:
+        int width = 0, height = 0;
+        SDL_Texture *texture = nullptr;
 
-public:
-  Texture(SDL_Texture *texture);
+    public:
+        Texture(SDL_Texture *texture);
 
-  ~Texture();
+        ~Texture();
 
-  SDL_Texture *getTexture() const;
+        SDL_Texture *getTexture() const;
 
-  int getWidth() const;
+        int getWidth() const;
 
-  int getHeight() const;
-};
+        int getHeight() const;
+    };
 }
 
 #endif

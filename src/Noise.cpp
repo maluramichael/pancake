@@ -1,7 +1,7 @@
 #include "../include/Noise.h"
+#include <iostream>
 #include <numeric>
 #include <random>
-#include <iostream>
 
 namespace Pancake {
 
@@ -31,8 +31,8 @@ Noise::Noise() {
 }
 
 Noise::Noise(unsigned int seed) {
-  p.resize(256);
-  std::iota(p.begin(), p.end(), 0);
+  p.resize(256);                    // foo
+  std::iota(p.begin(), p.end(), 0); // bar
   std::default_random_engine engine(seed);
   std::shuffle(p.begin(), p.end(), engine);
   p.insert(p.end(), p.begin(), p.end());

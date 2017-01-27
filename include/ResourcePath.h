@@ -23,11 +23,11 @@ namespace Pancake {
      * Paths returned will be Project_Root/res/subDir
      */
     std::string getResourcePath(const std::string &subDir = "") {
-        #ifdef _WIN32
+#ifdef _WIN32
         const char PATH_SEP = '\\';
-        #else
+#else
         const char PATH_SEP = '/';
-        #endif
+#endif
         static std::string baseRes;
         if (baseRes.empty()) {
             char *basePath = SDL_GetBasePath();
