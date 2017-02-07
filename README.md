@@ -1,3 +1,5 @@
+![Pancake Logo](https://raw.githubusercontent.com/davidblumer/pancake/master/assets/img/logo.png)
+
 # Pancake
 Game library for sdl2
 
