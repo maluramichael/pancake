@@ -5,23 +5,29 @@
 #include "../../include/Graphics/Texture.h"
 
 namespace Pancake {
+    namespace Graphics {
 
-Texture::Texture(SDL_Texture *texture) : texture(texture) {
-  if (texture != nullptr) {
-    SDL_QueryTexture(texture, NULL, NULL, &width, &height);
-    std::cout << "Width: " << width << " Height: " << height << std::endl;
-  }
-}
+        Texture::Texture(SDL_Texture* texture) : texture(texture) {
+            if (texture != nullptr) {
+                SDL_QueryTexture(texture, NULL, NULL, &width, &height);
+                std::cout << "Width: " << width << " Height: " << height << std::endl;
+            }
+        }
 
-Texture::~Texture() {
-  if (texture != nullptr) {
-    SDL_DestroyTexture(texture);
-  }
-}
+        Texture::~Texture() {
+            if (texture != nullptr) {
+                SDL_DestroyTexture(texture);
+            }
+        }
 
-SDL_Texture *Texture::getTexture() const { return texture; }
+        SDL_Texture* Texture::getTexture() const { return texture; }
 
-int Texture::getWidth() const { return this->width; }
+        int Texture::getWidth() const { return this->width; }
 
-int Texture::getHeight() const { return this->height; }
+        int Texture::getHeight() const { return this->height; }
+
+        void Texture::setFilename(const std::string& filename) { Texture::filename = filename; }
+
+        const std::string& Texture::getFilename() const { return filename; }
+    }
 }

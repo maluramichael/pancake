@@ -7,23 +7,29 @@
 #include <iostream>
 
 namespace Pancake {
+    namespace Graphics {
+        class Texture {
+        private:
+            int width = 0, height = 0;
+            SDL_Texture* texture = nullptr;
+            std::string filename = "";
 
-    class Texture {
-    private:
-        int width = 0, height = 0;
-        SDL_Texture *texture = nullptr;
+        public:
+            Texture(SDL_Texture* texture);
 
-    public:
-        Texture(SDL_Texture *texture);
+            ~Texture();
 
-        ~Texture();
+            void setFilename(const std::string& filename);
 
-        SDL_Texture *getTexture() const;
+            const std::string& getFilename() const;
 
-        int getWidth() const;
+            SDL_Texture* getTexture() const;
 
-        int getHeight() const;
-    };
+            int getWidth() const;
+
+            int getHeight() const;
+        };
+    }
 }
 
 #endif

@@ -5,8 +5,12 @@
 #ifndef PANCAKE_MENUITEM_H
 #define PANCAKE_MENUITEM_H
 
-class MenuItem {
+namespace Pancake {
+    namespace Menu {
+        class MenuItem {
 
-};
+        };
+    }
+}
 
 #endif //PANCAKE_MENUITEM_H

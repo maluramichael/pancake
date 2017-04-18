@@ -5,8 +5,12 @@
 #ifndef PANCAKE_EMITTER_H
 #define PANCAKE_EMITTER_H
 
-class Emitter {
+namespace Pancake {
+    namespace Particles {
+        class Emitter {
 
-};
+        };
+    }
+}
 
 #endif //PANCAKE_EMITTER_H

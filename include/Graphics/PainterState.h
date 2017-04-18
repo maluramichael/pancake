@@ -5,6 +5,7 @@
 #include "Color.h"
 
 namespace Pancake {
+    namespace Graphics {
 
     class PainterState {
     private:
@@ -21,6 +22,7 @@ namespace Pancake {
 
         void setColor(Color color);
     };
+}
 }
 
 #endif

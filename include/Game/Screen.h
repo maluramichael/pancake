@@ -5,8 +5,12 @@
 #ifndef PANCAKE_SCREEN_H
 #define PANCAKE_SCREEN_H
 
-class Screen {
+namespace Pancake {
+    namespace Game {
+        class Screen {
 
-};
+        };
+    }
+}
 
 #endif //PANCAKE_SCREEN_H

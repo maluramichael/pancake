@@ -21,26 +21,35 @@ FILE(GLOB HEADERS
     include/*.h
     include/Graphics/*.h
     include/Images/*.h
-    include/ImGui/*.h
     include/UI/*.h
     include/Game/*.h
     include/Menu/*.h
     include/Particles/*.h
+    include/Math/*.h
+
+    libs/imgui/*.h
+
 )
 
 FILE(GLOB SOURCES 
     src/*.cpp
     src/Graphics/*.cpp
     src/Images/*.cpp
-    src/ImGui/*.cpp
     src/UI/*.cpp
     src/Game/*.cpp
     src/Menu/*.cpp
     src/Particles/*.cpp
+    src/Math/*.cpp
+
+    libs/imgui/*.cpp
+
 )
+
+FILE(GLOB IMGUI_HEADER libs/imgui/*.h)
 
 ADD_LIBRARY(pancake STATIC ${SOURCES} ${HEADERS})
 
 INSTALL(TARGETS pancake DESTINATION "lib")
 
 INSTALL(DIRECTORY include/ DESTINATION "include/Pancake")
+INSTALL(FILES ${IMGUI_HEADER} DESTINATION "include/Pancake/UI")

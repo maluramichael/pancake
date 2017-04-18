@@ -2,50 +2,53 @@
 #ifndef __PANCAKE__GRAPHICS__COLOR__
 #define __PANCAKE__GRAPHICS__COLOR__
 namespace Pancake {
-    class Color {
-    private:
-        short r = 255, g = 255, b = 255, a = 255;
+    namespace Graphics {
 
-    public:
-        Color();
+        class Color {
+        private:
+            short r = 255, g = 255, b = 255, a = 255;
 
-        Color(short r, short g, short b, short a);
+        public:
+            Color();
 
-        Color(int color);
+            Color(short r, short g, short b, short a);
 
-        void lighten(float d);
+            Color(int color);
 
-        void darken(float d);
+            void lighten(float d);
 
-        int getColor();
+            void darken(float d);
 
-        short getHue();
+            int getColor();
 
-        short getSaturation();
+            short getHue();
 
-        short getValue();
+            short getSaturation();
 
-        short getLightness();
+            short getValue();
 
-        short getBrightness();
+            short getLightness();
 
-        short getIntensity();
+            short getBrightness();
 
-        short red();
+            short getIntensity();
 
-        short green();
+            short red();
 
-        short blue();
+            short green();
 
-        short alpha();
+            short blue();
 
-        void red(short v);
+            short alpha();
 
-        void green(short v);
+            void red(short v);
 
-        void blue(short v);
+            void green(short v);
 
-        void alpha(short v);
-    };
+            void blue(short v);
+
+            void alpha(short v);
+        };
+    }
 }
 #endif

@@ -5,8 +5,7 @@
 #ifndef PANCAKE_UI_H
 #define PANCAKE_UI_H
 
-class UI {
-
-};
+#include "Button.h"
+#include "Interface.h"
 
 #endif //PANCAKE_UI_H
