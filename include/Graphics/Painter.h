@@ -7,6 +7,7 @@
 
 #include <SDL2/SDL_image.h>
 #include <string>
+#include "../Math/Vector2.h"
 
 namespace Pancake {
     namespace Graphics {
@@ -17,17 +18,24 @@ namespace Pancake {
 
             Texture* loadTexture(const std::string& file);
 
-            void drawTexture(Texture* texture,
-                             float x, float y,
-                             float w, float h,
-                             float sx, float sy,
-                             float sw, float sh);
+            void
+            drawTexture(const Texture& texture, float x, float y, float w, float h, float ox, float oy, float rotation);
+
+            void drawTexture(const Texture& texture, float x, float y, float w, float h, float rotation);
 
             void drawTexture(const Texture& texture, float x, float y, float w, float h);
 
+            void drawTexture(const Texture& texture, float x, float y, float rotation);
+
             void drawTexture(const Texture& texture, float x, float y);
 
-            void drawTexture(const Texture& texture);
+            void drawTexture(const Texture& texture, const Math::Vector2& position, const Math::Vector2& size, float rotation, const Math::Vector2& origin);
+
+            void drawTexture(const Texture& texture, const Math::Vector2& position, const Math::Vector2& size, float rotation);
+
+            void drawTexture(const Texture& texture, const Math::Vector2& position, const Math::Vector2& size);
+
+            void drawTexture(const Texture& texture, const Math::Vector2& position);
 
             void drawLine(float x0, float y0, float x1, float y1);
 
@@ -49,6 +57,7 @@ namespace Pancake {
 
         private:
             SDL_Renderer* renderer;
+
             PainterState currentState;
         };
     }

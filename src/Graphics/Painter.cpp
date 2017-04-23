@@ -26,25 +26,36 @@ namespace Pancake {
             return texture;
         }
 
-        void Painter::drawTexture(Texture* texture, float x, float y, float w, float h, float sx, float sy, float sw,
-                                  float sh) {}
-
-        void Painter::drawTexture(const Texture& texture, float x, float y, float w,
-                                  float h) {
+        void Painter::drawTexture(const Texture& texture, float x, float y, float w, float h, float ox, float oy,
+                                  float rotation) {
             SDL_Rect destination;
             destination.x = x;
             destination.y = y;
             destination.w = w;
             destination.h = h;
-            SDL_RenderCopy(this->renderer, texture.getTexture(), nullptr, &destination);
+
+            SDL_Point offset;
+            offset.x = ox;
+            offset.y = oy;
+
+            SDL_RenderCopyEx(this->renderer, texture.getTexture(), nullptr, &destination, rotation, &offset,
+                             SDL_RendererFlip::SDL_FLIP_NONE);
+        }
+
+        void Painter::drawTexture(const Texture& texture, float x, float y, float w, float h, float rotation) {
+            drawTexture(texture, x, y, w, h, 0, 0, rotation);
+        }
+
+        void Painter::drawTexture(const Texture& texture, float x, float y, float w, float h) {
+            drawTexture(texture, x, y, w, h, 0);
+        }
+
+        void Painter::drawTexture(const Texture& texture, float x, float y, float roation) {
+            drawTexture(texture, x, y, texture.getWidth(), texture.getHeight(), roation);
         }
 
         void Painter::drawTexture(const Texture& texture, float x, float y) {
-            drawTexture(texture, x, y, texture.getWidth(), texture.getHeight());
-        }
-
-        void Painter::drawTexture(const Texture& texture) {
-            drawTexture(texture, 0, 0);
+            drawTexture(texture, x, y, 0);
         }
 
         void Painter::drawLine(float x0, float y0, float x1, float y1) {
@@ -84,6 +95,36 @@ namespace Pancake {
         void Painter::clear(Uint8 r, Uint8 g, Uint8 b, Uint8 a) {
             setColor(r, g, b, a);
             SDL_RenderClear(renderer);
+        }
+
+        void Painter::drawTexture(const Texture& texture, const Math::Vector2& position) {
+            drawTexture(texture, position, Math::Vector2(1, 1));
+        }
+
+        void Painter::drawTexture(const Texture& texture, const Math::Vector2& position, const Math::Vector2& size) {
+            drawTexture(texture, position, size, 0);
+        }
+
+        void Painter::drawTexture(const Texture& texture, const Math::Vector2& position, const Math::Vector2& size,
+                                  float rotation) {
+            drawTexture(texture, position, size, rotation, Math::Vector2(0, 0));
+
+        }
+
+        void Painter::drawTexture(const Texture& texture, const Math::Vector2& position, const Math::Vector2& size,
+                                  float rotation, const Math::Vector2& origin) {
+            SDL_Rect destination;
+            destination.x = position.x;
+            destination.y = position.y;
+            destination.w = texture.getWidth() * size.x;
+            destination.h = texture.getHeight() * size.y;
+
+            SDL_Point offset;
+            offset.x = origin.x;
+            offset.y = origin.y;
+
+            SDL_RenderCopyEx(this->renderer, texture.getTexture(), nullptr, &destination, rotation, &offset,
+                             SDL_RendererFlip::SDL_FLIP_NONE);
         }
 
     }
