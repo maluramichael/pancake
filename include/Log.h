@@ -20,7 +20,8 @@ namespace Pancake {
 
     class Log;
 
-    typedef std::map<const std::string, Log*> Logs;
+    typedef Log* LogHandle;
+    typedef std::map<const std::string, LogHandle> Logs;
 
     class Log {
     private:
@@ -28,9 +29,11 @@ namespace Pancake {
 
         ~Log();
 
-        Log(const Log& l);
+        Log(const LogHandle l);
 
     protected:
+        static bool initialized;
+
         static Logs instances;
 
         long long messageCount = 0;
@@ -39,7 +42,7 @@ namespace Pancake {
 
 
     public:
-        static Log& getInstance(std::string system = "PANCAKE");
+        static LogHandle getInstance(std::string system = "PANCAKE");
 
         static void initialize();
 

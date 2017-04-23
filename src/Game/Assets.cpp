@@ -9,7 +9,7 @@ Pancake::Game::Assets::Assets(Pancake::Graphics::Painter* painter) : painter(pai
 }
 
 Pancake::Graphics::Texture* Pancake::Game::Assets::loadTexture(const std::string& file) {
-    Log::getInstance("ASSETS").info("Try to load texture " + file);
+    Log::getInstance("ASSETS")->info("Try to load texture " + file);
 
     Pancake::Graphics::Texture* texture = nullptr;
     if (textures.find(file) == textures.end()) {
@@ -21,10 +21,10 @@ Pancake::Graphics::Texture* Pancake::Game::Assets::loadTexture(const std::string
 }
 
 Pancake::Game::Assets::~Assets() {
-    Log::getInstance("ASSETS").info("Destroy assets");
+    Log::getInstance("ASSETS")->info("Destroy assets");
 
     for (auto pair : textures) {
-        Log::getInstance("ASSETS").info("Destroy texture " + (pair.second->getFilename()));
+        Log::getInstance("ASSETS")->info("Destroy texture " + (pair.second->getFilename()));
         delete pair.second;
     }
 }

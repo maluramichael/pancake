@@ -15,6 +15,7 @@ namespace Pancake {
     }
 
     Logs Log::instances = Logs();
+    bool Log::initialized = false;
 
     Log::Log(std::string system) {
         this->system = system;
@@ -24,7 +25,7 @@ namespace Pancake {
 
     }
 
-    Log::Log(const Log& l) : system(l.system) {
+    Log::Log(const LogHandle l) : system(l->system) {
 
     }
 
@@ -44,19 +45,21 @@ namespace Pancake {
         writeLine(message);
     }
 
-    Log& Log::getInstance(std::string system) {
+    LogHandle Log::getInstance(std::string system) {
         if (Log::instances.find(system) == Log::instances.end()) {
             Log::instances.insert(std::pair<std::string, Log*>(system, new Log(system)));
         }
-        return *Log::instances[system];
+        return Log::instances[system];
     }
 
     void Log::initialize() {
-        Log::getInstance("LOG").info("Initialize log");
+        Log::getInstance("LOG")->info("Initialize log");
+        Log::initialized = true;
     }
 
     void Log::release() {
-        Log::getInstance("LOG").info("Release log");
+        Log::getInstance("LOG")->info("Release log");
+        Log::initialized = false;
         for (auto pair : Log::instances) {
             delete pair.second;
             pair.second = nullptr;
