@@ -15,6 +15,18 @@ namespace Pancake {
         public:
             float x = 0, y = 0;
 
+            static Vector2 Zero();
+
+            static Vector2 One();
+
+            static Vector2 Up();
+
+            static Vector2 Down();
+
+            static Vector2 Left();
+
+            static Vector2 Right();
+
             Vector2();
 
             Vector2(float v);

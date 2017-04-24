@@ -137,3 +137,27 @@ float Pancake::Math::Vector2::rad() {
 float Pancake::Math::Vector2::deg() {
     return (float) (atan2(y, x) * (180 / M_PI));
 }
+
+Pancake::Math::Vector2 Pancake::Math::Vector2::Zero() {
+    return Pancake::Math::Vector2(0, 0);
+}
+
+Pancake::Math::Vector2 Pancake::Math::Vector2::One() {
+    return Pancake::Math::Vector2(1, 1);
+}
+
+Pancake::Math::Vector2 Pancake::Math::Vector2::Up() {
+    return Pancake::Math::Vector2(0, -1);
+}
+
+Pancake::Math::Vector2 Pancake::Math::Vector2::Down() {
+    return Pancake::Math::Vector2(0, 1);
+}
+
+Pancake::Math::Vector2 Pancake::Math::Vector2::Left() {
+    return Pancake::Math::Vector2(-1, 0);
+}
+
+Pancake::Math::Vector2 Pancake::Math::Vector2::Right() {
+    return Pancake::Math::Vector2(1, 0);
+}
