@@ -9,8 +9,9 @@ namespace Pancake {
 
         Texture::Texture(SDL_Texture* texture) : texture(texture) {
             if (texture != nullptr) {
+                int width = 0, height = 0;
                 SDL_QueryTexture(texture, NULL, NULL, &width, &height);
-                std::cout << "Width: " << width << " Height: " << height << std::endl;
+                setDimensions(Math::Vector2(width, height));
             }
         }
 
@@ -22,12 +23,20 @@ namespace Pancake {
 
         SDL_Texture* Texture::getTexture() const { return texture; }
 
-        int Texture::getWidth() const { return this->width; }
-
-        int Texture::getHeight() const { return this->height; }
-
         void Texture::setFilename(const std::string& filename) { Texture::filename = filename; }
 
         const std::string& Texture::getFilename() const { return filename; }
+
+        const Math::Vector2& Texture::getDimensions() const { return dimensions; }
+
+        void Texture::setDimensions(const Math::Vector2& dimensions) { Texture::dimensions = dimensions; }
+
+        const Math::Vector2& Texture::getScale() const { return scale; }
+
+        void Texture::setScale(const Math::Vector2& scale) { Texture::scale = scale; }
+
+        float Texture::getRotation() const { return rotation; }
+
+        void Texture::setRotation(float rotation) { Texture::rotation = rotation; }
     }
 }

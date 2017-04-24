@@ -6,13 +6,18 @@
 #include <string>
 #include <iostream>
 
+#include "../Math/Vector2.h"
+
 namespace Pancake {
     namespace Graphics {
         class Texture {
         private:
-            int width = 0, height = 0;
             SDL_Texture* texture = nullptr;
             std::string filename = "";
+
+            Math::Vector2 dimensions = Math::Vector2::Zero();
+            Math::Vector2 scale = Math::Vector2::One();
+            float rotation = 0;
 
         public:
             Texture(SDL_Texture* texture);
@@ -25,9 +30,19 @@ namespace Pancake {
 
             SDL_Texture* getTexture() const;
 
-            int getWidth() const;
+            const Math::Vector2& getDimensions() const;
 
-            int getHeight() const;
+            void setDimensions(const Math::Vector2& dimensions);
+
+            const Math::Vector2& getScale() const;
+
+            void setScale(const Math::Vector2& scale);
+
+            float getRotation() const;
+
+            void setRotation(float rotation);
+
+
         };
     }
 }
