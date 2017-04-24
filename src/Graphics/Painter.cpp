@@ -51,7 +51,7 @@ namespace Pancake {
         }
 
         void Painter::drawTexture(const Texture& texture, float x, float y, float roation) {
-            drawTexture(texture, x, y, texture.getWidth(), texture.getHeight(), roation);
+            drawTexture(texture, x, y, texture.getDimensions().x, texture.getDimensions().y, roation);
         }
 
         void Painter::drawTexture(const Texture& texture, float x, float y) {
@@ -116,8 +116,8 @@ namespace Pancake {
             SDL_Rect destination;
             destination.x = position.x;
             destination.y = position.y;
-            destination.w = texture.getWidth() * size.x;
-            destination.h = texture.getHeight() * size.y;
+            destination.w = texture.getDimensions().x * size.x;
+            destination.h = texture.getDimensions().y * size.y;
 
             SDL_Point offset;
             offset.x = origin.x;
@@ -125,6 +125,10 @@ namespace Pancake {
 
             SDL_RenderCopyEx(this->renderer, texture.getTexture(), nullptr, &destination, rotation, &offset,
                              SDL_RendererFlip::SDL_FLIP_NONE);
+        }
+
+        void Painter::drawTexture(const Texture& texture) {
+
         }
 
     }

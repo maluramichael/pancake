@@ -37,6 +37,8 @@ namespace Pancake {
 
             void drawTexture(const Texture& texture, const Math::Vector2& position);
 
+            void drawTexture(const Texture& texture);
+
             void drawLine(float x0, float y0, float x1, float y1);
 
             void drawPixel(Sint16 x, Sint16 y);
