@@ -24,8 +24,14 @@ int Pancake::Game::Game::init() {
     }
 
     log->info("Create window");
-    window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height,
-                              SDL_WINDOW_SHOWN);
+    window = SDL_CreateWindow(
+            title.c_str(),
+            SDL_WINDOWPOS_CENTERED,
+            SDL_WINDOWPOS_CENTERED,
+            (int) resolution.x,
+            (int) resolution.y,
+            SDL_WINDOW_SHOWN
+    );
     if (window == nullptr) {
         log->error(SDL_GetError());
         SDL_Quit();
@@ -88,8 +94,9 @@ void Pancake::Game::Game::destroy() {
     Pancake::Log::release();
 }
 
-Pancake::Game::Game::Game(std::string title, int width, int height) : title(title), width(width),
-                                                                      height(height) {
+Pancake::Game::Game::Game(std::string title, int width, int height) {
+    setResolution(width, height);
+    setTitle(title);
 }
 
 void Pancake::Game::Game::run() {
@@ -130,4 +137,23 @@ void Pancake::Game::Game::run() {
 
 void Pancake::Game::Game::quitGame() {
     quit = true;
+}
+
+void Pancake::Game::Game::setTitle(std::string title) {
+    this->title = title;
+    SDL_SetWindowTitle(this->window, title.c_str());
+}
+
+void Pancake::Game::Game::setResolution(int width, int height) {
+    this->resolution = Pancake::Math::Vector2(width, height);
+    SDL_SetWindowSize(this->window, width, height);
+}
+
+void Pancake::Game::Game::setFullscreen(WindowMode mode) {
+    this->windowMode = mode;
+    SDL_SetWindowFullscreen(this->window, mode);
+
+    int w, h;
+    SDL_GetWindowSize(this->window, &w, &h);
+    this->resolution = Pancake::Math::Vector2(w, h);
 }
