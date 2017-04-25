@@ -53,6 +53,11 @@ std::ostream& Pancake::Math::operator<<(std::ostream& stream, const Pancake::Mat
     return stream;
 }
 
+void Pancake::Math::Vector2::move(float x, float y) {
+    this->x += x;
+    this->y += y;
+}
+
 void Pancake::Math::Vector2::add(const Pancake::Math::Vector2& o) {
     x += o.x;
     y += o.y;

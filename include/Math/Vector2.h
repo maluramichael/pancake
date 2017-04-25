@@ -13,8 +13,10 @@ namespace Pancake {
 
         class Vector2 {
         public:
+            // Fields
             float x = 0, y = 0;
 
+            // Generators
             static Vector2 Zero();
 
             static Vector2 One();
@@ -27,12 +29,14 @@ namespace Pancake {
 
             static Vector2 Right();
 
+            // Constructors
             Vector2();
 
             Vector2(float v);
 
             Vector2(float x, float y);
 
+            // Operators
             Vector2 operator+(const Vector2& o) const;
 
             Vector2 operator-(const Vector2& o) const;
@@ -50,6 +54,9 @@ namespace Pancake {
             Vector2 operator/(const float& o) const;
 
             friend std::ostream& operator<<(std::ostream& stream, const Vector2& v);
+
+            // Methods
+            void move(float x, float y);
 
             void add(const Vector2& o);
 
