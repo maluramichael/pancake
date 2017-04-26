@@ -18,8 +18,11 @@ namespace Pancake {
 
             Texture* loadTexture(const std::string& file);
 
-            void
-            drawTexture(const Texture& texture, float x, float y, float w, float h, float ox, float oy, float rotation);
+            void drawTexture(const Texture& texture,
+                             float x, float y,
+                             float w, float h,
+                             float ox, float oy,
+                             float rotation);
 
             void drawTexture(const Texture& texture, float x, float y, float w, float h, float rotation);
 
@@ -29,9 +32,11 @@ namespace Pancake {
 
             void drawTexture(const Texture& texture, float x, float y);
 
-            void drawTexture(const Texture& texture, const Math::Vector2& position, const Math::Vector2& size, float rotation, const Math::Vector2& origin);
+            void drawTexture(const Texture& texture, const Math::Vector2& position, const Math::Vector2& size,
+                             float rotation, const Math::Vector2& origin);
 
-            void drawTexture(const Texture& texture, const Math::Vector2& position, const Math::Vector2& size, float rotation);
+            void drawTexture(const Texture& texture, const Math::Vector2& position, const Math::Vector2& size,
+                             float rotation);
 
             void drawTexture(const Texture& texture, const Math::Vector2& position, const Math::Vector2& size);
 
@@ -39,15 +44,23 @@ namespace Pancake {
 
             void drawTexture(const Texture& texture);
 
+            void drawRawTexture(SDL_Texture* texture);
+
             void drawLine(float x0, float y0, float x1, float y1);
 
-            void drawPixel(Sint16 x, Sint16 y);
+            void drawLine(const Math::Vector2& from, const Math::Vector2& to);
 
-            void drawPixel(Sint16 x, Sint16 y, int color);
+            void drawPixel(float x, float y);
 
-            void drawRectangle(Sint16 x, Sint16 y, Sint16 w, Sint16 h);
+            void drawPixel(const Math::Vector2& position);
 
-            void drawRectangle(Sint16 x, Sint16 y, Sint16 w, Sint16 h, int color);
+            void drawPixel(float x, float y, int color);
+
+            void drawRectangle(float x, float y, float w, float h);
+
+            void drawRectangle(const Math::Vector2& position, const Math::Vector2& size);
+
+            void drawRectangle(float x, float y, float w, float h, int color);
 
             void setColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a);
 
@@ -57,10 +70,13 @@ namespace Pancake {
 
             void restoreState();
 
+            SDL_Renderer* getRenderer() const;
+
         private:
             SDL_Renderer* renderer;
 
             PainterState currentState;
+
         };
     }
 }
