@@ -23,6 +23,8 @@ int Pancake::Game::Game::init() {
         return Pancake::Codes::ERROR;
     }
 
+    setupSDLOpenGL();
+
     log->info("Create window");
     window = SDL_CreateWindow(
             title.c_str(),
@@ -30,13 +32,22 @@ int Pancake::Game::Game::init() {
             SDL_WINDOWPOS_CENTERED,
             (int) resolution.x,
             (int) resolution.y,
-            SDL_WINDOW_SHOWN
+            SDL_WINDOW_OPENGL
     );
     if (window == nullptr) {
         log->error(SDL_GetError());
         SDL_Quit();
         return Pancake::Codes::ERROR;
     }
+
+    glContext = SDL_GL_CreateContext(this->window);
+
+    if (GLEW_OK != glewInit()) {
+        log->error("Could not initialize glew");
+        return Pancake::Codes::ERROR;
+    }
+
+    afterOpenGL();
 
     log->info("Create renderer");
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
@@ -114,20 +125,25 @@ void Pancake::Game::Game::run() {
         SDL_Event event;
 
         while (SDL_PollEvent(&event)) {
+            processEvent(&event);
             // System events
             if (event.type == SDL_QUIT) {
                 quit = true;
             }
+
         }
         keyboard.update(0);
-        painter->clear(50, 50, 50, 255);
+        painter->clear(0, 0, 0, 255);
 
         float delta = timer.getTicks() / 1000.0f;
         update(delta);
         timer.start(); // restart time for next frame
 
+        glPushMatrix();
+        glTranslatef(camera.getLeft() - this->resolution.x * 0.5f, camera.getTop() - this->resolution.y * 0.5f, 0.0f);
         render();
         SDL_RenderPresent(renderer);
+        glPopMatrix();
         SDL_Delay(1);
     }
 
@@ -157,3 +173,16 @@ void Pancake::Game::Game::setFullscreen(WindowMode mode) {
     SDL_GetWindowSize(this->window, &w, &h);
     this->resolution = Pancake::Math::Vector2(w, h);
 }
+
+void Pancake::Game::Game::setupSDLOpenGL() {
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+    SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
+    SDL_DisplayMode current;
+    SDL_GetCurrentDisplayMode(0, &current);
+}
+

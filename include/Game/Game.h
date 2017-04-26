@@ -5,13 +5,16 @@
 #ifndef PANCAKE_GAME_H
 #define PANCAKE_GAME_H
 
-#include "../Graphics/Painter.h"
+#include <GL/glew.h>
+
 #include "Assets.h"
 #include "Keyboard.h"
 #include "Timer.h"
+#include "Camera.h"
 #include "../Constants.h"
 #include "../Log.h"
 #include "../Cleanup.h"
+#include "../Graphics/Painter.h"
 
 namespace Pancake {
     namespace Game {
@@ -35,19 +38,22 @@ namespace Pancake {
 
             void setFullscreen(WindowMode mode);
 
+
         protected:
+            Pancake::Game::Camera camera;
             Pancake::Graphics::Painter* painter = nullptr;
             Pancake::Game::Assets* assets = nullptr;
             Keyboard keyboard;
+
+            SDL_Window* window = nullptr;
+            SDL_Renderer* renderer = nullptr;
+            SDL_GLContext glContext = nullptr;
 
         private:
             bool quit = false;
             std::string title = "";
             WindowMode windowMode = WINDOWED;
             Pancake::Math::Vector2 resolution;
-
-            SDL_Window* window = nullptr;
-            SDL_Renderer* renderer = nullptr;
 
             int init();
 
@@ -66,6 +72,14 @@ namespace Pancake {
             virtual void update(float delta) {}
 
             virtual void render() {}
+
+            virtual void setupSDLOpenGL();
+
+            virtual void afterOpenGL() {};
+
+            virtual void processEvent(SDL_Event* event) {
+            }
+
         };
     }
 }
