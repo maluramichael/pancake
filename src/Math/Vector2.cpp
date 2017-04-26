@@ -3,6 +3,7 @@
 //
 
 #include "../../include/Math/Vector2.h"
+#include "../../include/Math/Interpolate.h"
 
 Pancake::Math::Vector2::Vector2() {
 
@@ -165,4 +166,18 @@ Pancake::Math::Vector2 Pancake::Math::Vector2::Left() {
 
 Pancake::Math::Vector2 Pancake::Math::Vector2::Right() {
     return Pancake::Math::Vector2(1, 0);
+}
+
+Pancake::Math::Vector2 Pancake::Math::Vector2::interpolate(const Pancake::Math::Vector2& to, float t) const {
+    return Pancake::Math::Vector2(
+            Pancake::Math::interpolate(this->x, to.x, t),
+            Pancake::Math::interpolate(this->y, to.y, t)
+    );
+}
+
+Pancake::Math::Vector2 Pancake::Math::Vector2::interpolateCosine(const Pancake::Math::Vector2& to, float t) const {
+    return Pancake::Math::Vector2(
+            Pancake::Math::interpolateCosine(this->x, to.x, t),
+            Pancake::Math::interpolateCosine(this->y, to.y, t)
+    );
 }
