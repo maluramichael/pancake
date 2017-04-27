@@ -6,12 +6,95 @@
 
 #include "../../include/Graphics/Painter.h"
 #include "../../include/Log.h"
-
+#include <GL/glew.h>
 
 namespace Pancake {
     namespace Graphics {
 
-        Painter::Painter(SDL_Renderer* r) : renderer(r) {}
+        Painter::Painter(SDL_Renderer* r) : renderer(r) {
+            initialize();
+        }
+
+        void Painter::initialize() {
+
+            // Quad
+            std::vector<VertexPosition> quadVertices = {
+                    {-0.5f, 0.5f}, // top left
+                    {0.5f,  0.5f}, // top right
+                    {0.5f,  -0.5f}, // bottom right
+                    {-0.5f, -0.5f} // bottom left
+            };
+
+            GLuint vbo;
+            glGenBuffers(1, &vbo);
+            glBindBuffer(GL_ARRAY_BUFFER, vbo);
+            glBufferData(GL_ARRAY_BUFFER,
+                         sizeof(VertexPositionColor) * quadVertices.size(),
+                         &quadVertices[0],
+                         GL_STATIC_DRAW);
+
+
+            // Shader
+            const char* vsCode = "#version 150\n"
+                    "\n"
+                    "in vec2 position;\n"
+                    "//in vec3 color;\n"
+                    "//out vec3 Color;\n"
+                    "\n"
+                    "void main()\n"
+                    "{\n"
+                    "    //Color = color;\n"
+                    "    gl_Position = vec4(position, 0.0, 1.0);\n"
+                    "}";
+
+            std::string fsCode = "#version 150\n"
+                    "\n"
+                    "//in vec3 Color;\n"
+                    "out vec4 outColor;\n"
+                    "\n"
+                    "void main()\n"
+                    "{\n"
+                    "    outColor = vec4(1.0, 1.0, 1.0, 1.0);\n"
+                    "}";
+
+            shader.setFragmentShaderSource(fsCode);
+            shader.setVertexShaderSource(vsCode);
+            shader.load();
+            shader.begin();
+            auto shaderProgram = shader.getProgram();
+
+            vertexArray = createVertexArray();
+            glBindVertexArray(vertexArray);
+            auto posAttrib = Pancake::Graphics::createVertexAttributePointer(shaderProgram,
+                                                                             "position",
+                                                                             2,
+                                                                             GL_FLOAT,
+                                                                             2 * sizeof(float),
+                                                                             0);
+//            auto colAttrib = createVertexAttributePointer(shaderProgram,
+//                                                          "color",
+//                                                          3,
+//                                                          GL_FLOAT,
+//                                                          5 * sizeof(float),
+//                                                          2 * sizeof(float));
+            glEnableVertexAttribArray(posAttrib);
+//            glEnableVertexAttribArray(colAttrib);
+
+            GLuint elements[] = { // clock wise 2 triangles
+                    0, 1, 2, // top left, top right, bottom right
+                    0, 2, 3 // top left, bottom right, bottom left
+            };
+
+            elementBuffer = createBuffer();
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBuffer);
+            glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(elements), elements, GL_STATIC_DRAW);
+
+            shader.end();
+
+            glBindVertexArray(0);
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+            glUseProgram(0);
+        }
 
         Texture* Painter::loadTexture(const std::string& file) {
             std::cout << "Load texture: " << file << std::endl;
@@ -93,8 +176,8 @@ namespace Pancake {
         }
 
         void Painter::clear(Uint8 r, Uint8 g, Uint8 b, Uint8 a) {
-            setColor(r, g, b, a);
-            SDL_RenderClear(renderer);
+            glClearColor(r, g, b, a);
+            glClear(GL_COLOR_BUFFER_BIT);
         }
 
         void Painter::drawTexture(const Texture& texture, const Math::Vector2& position) {
@@ -166,6 +249,18 @@ namespace Pancake {
 
         SDL_Renderer* Painter::getRenderer() const {
             return renderer;
+        }
+
+        void Painter::drawQuad() {
+            glBindVertexArray(vertexArray);
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBuffer);
+            shader.begin();
+
+            glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+            glBindVertexArray(0);
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+            shader.end();
         }
 
     }

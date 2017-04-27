@@ -7,14 +7,27 @@
 
 #include <SDL2/SDL_image.h>
 #include <string>
+#include <vector>
+#include <GL/glew.h>
+
 #include "../Math/Vector2.h"
+#include "OpenGL.h"
+#include "Shader.h"
 
 namespace Pancake {
     namespace Graphics {
 
         class Painter {
+        private:
+            SDL_Renderer* renderer;
+            PainterState currentState;
+            Shader shader;
+            GLuint vertexArray, elementBuffer;
+
         public:
             Painter(SDL_Renderer* r);
+
+            void initialize();
 
             Texture* loadTexture(const std::string& file);
 
@@ -62,6 +75,8 @@ namespace Pancake {
 
             void drawRectangle(float x, float y, float w, float h, int color);
 
+            void drawQuad();
+
             void setColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a);
 
             void clear(Uint8 r, Uint8 g, Uint8 b, Uint8 a);
@@ -72,10 +87,6 @@ namespace Pancake {
 
             SDL_Renderer* getRenderer() const;
 
-        private:
-            SDL_Renderer* renderer;
-
-            PainterState currentState;
 
         };
     }
