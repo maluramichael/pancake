@@ -8,13 +8,13 @@ int Pancake::Game::Game::init() {
     Pancake::Log::initialize();
     Pancake::LogHandle log = Pancake::Log::getInstance("GAME");
 
-    beforeInit();
-
+    beforeSDLInitialized();
     log->info("Initialize sdl");
     if (SDL_Init(SDL_INIT_VIDEO) != 0) {
         log->error(SDL_GetError());
         return Pancake::Codes::ERROR;
     }
+    afterSDLInitialized();
 
     log->info("Initialize sdl image");
     if ((IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG) != IMG_INIT_PNG) {
@@ -23,32 +23,18 @@ int Pancake::Game::Game::init() {
         return Pancake::Codes::ERROR;
     }
 
-    setupSDLOpenGL();
-
+    beforeWindowCreated();
     log->info("Create window");
-    window = SDL_CreateWindow(
-            title.c_str(),
-            SDL_WINDOWPOS_CENTERED,
-            SDL_WINDOWPOS_CENTERED,
-            (int) resolution.x,
-            (int) resolution.y,
-            SDL_WINDOW_OPENGL
-    );
+    window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, (int) resolution.x,
+                              (int) resolution.y, SDL_WINDOW_OPENGL);
     if (window == nullptr) {
         log->error(SDL_GetError());
         SDL_Quit();
         return Pancake::Codes::ERROR;
     }
+    afterWindowCreated();
 
-    glContext = SDL_GL_CreateContext(this->window);
-
-    if (GLEW_OK != glewInit()) {
-        log->error("Could not initialize glew");
-        return Pancake::Codes::ERROR;
-    }
-
-    afterOpenGL();
-
+    beforeRendererCreated();
     log->info("Create renderer");
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     if (renderer == nullptr) {
@@ -57,6 +43,19 @@ int Pancake::Game::Game::init() {
         SDL_Quit();
         return Pancake::Codes::ERROR;
     }
+    afterRendererCreated();
+
+    beforeOpenGLContextCreated();
+    glContext = SDL_GL_CreateContext(this->window);
+    afterOpenGLContextCreated();
+
+    beforeGLEWInit();
+    if (GLEW_OK != glewInit()) {
+        log->error("Could not initialize glew");
+        return Pancake::Codes::ERROR;
+    }
+    printf("OpenGL %s, GLSL %s\n", glGetString(GL_VERSION), glGetString(GL_SHADING_LANGUAGE_VERSION));
+    afterGLEWInit();
 
     log->info("Create painter");
     painter = new Pancake::Graphics::Painter(renderer);
@@ -68,12 +67,14 @@ int Pancake::Game::Game::init() {
     loadAssets();
 
     log->info("Game initialized");
-    afterInit();
+    initialized();
     return Pancake::Codes::OK;
 }
 
 void Pancake::Game::Game::destroy() {
     Pancake::LogHandle log = Pancake::Log::getInstance("GAME");
+
+    beforeDestroy();
 
     log->info("Destroy assets");
     destroyAssets();
@@ -99,7 +100,7 @@ void Pancake::Game::Game::destroy() {
     SDL_Quit();
 
     log->info("Destroy everything else");
-    afterDestroy();
+    destroyed();
 
     log->info("Done destroying game");
     Pancake::Log::release();
@@ -133,18 +134,20 @@ void Pancake::Game::Game::run() {
 
         }
         keyboard.update(0);
-        painter->clear(0, 0, 0, 255);
+//        painter->clear(0, 0, 0, 255);
 
         float delta = timer.getTicks() / 1000.0f;
         update(delta);
         timer.start(); // restart time for next frame
 
-        glPushMatrix();
-        glTranslatef(camera.getLeft() - this->resolution.x * 0.5f, camera.getTop() - this->resolution.y * 0.5f, 0.0f);
+//        glPushMatrix();
+//        glTranslatef(camera.getLeft() - this->resolution.x * 0.5f, camera.getTop() - this->resolution.y * 0.5f, 0.0f);
         render();
-        SDL_RenderPresent(renderer);
-        glPopMatrix();
-        SDL_Delay(1);
+//        SDL_RenderPresent(renderer);
+//        glPopMatrix();
+//        SDL_Delay(1);
+
+        renderUI();
     }
 
     log->info("Quit game");
@@ -173,16 +176,3 @@ void Pancake::Game::Game::setFullscreen(WindowMode mode) {
     SDL_GetWindowSize(this->window, &w, &h);
     this->resolution = Pancake::Math::Vector2(w, h);
 }
-
-void Pancake::Game::Game::setupSDLOpenGL() {
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
-    SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
-    SDL_DisplayMode current;
-    SDL_GetCurrentDisplayMode(0, &current);
-}
-

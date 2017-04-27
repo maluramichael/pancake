@@ -18,6 +18,10 @@
 
 namespace Pancake {
     namespace Game {
+
+        /**
+         * Creates game loop with update and render posibilities
+         */
         class Game {
         public:
             enum WindowMode {
@@ -59,26 +63,36 @@ namespace Pancake {
 
             void destroy();
 
-            virtual void beforeInit() {}
+            virtual void beforeSDLInitialized() {}
+            virtual void afterSDLInitialized() {}
+            virtual void beforeWindowCreated() {}
+            virtual void afterWindowCreated() {}
+            virtual void beforeRendererCreated() {}
+            virtual void afterRendererCreated() {}
+            virtual void beforeOpenGLContextCreated() {}
+            virtual void afterOpenGLContextCreated() {}
+            virtual void beforeGLEWInit() {}
+            virtual void afterGLEWInit() {}
 
-            virtual void afterInit() {}
 
             virtual void loadAssets() {}
 
+            virtual void initialized() {}
+
+
+            virtual void beforeDestroy() {}
+
             virtual void destroyAssets() {}
 
-            virtual void afterDestroy() {}
+            virtual void destroyed() {}
+
 
             virtual void update(float delta) {}
 
             virtual void render() {}
+            virtual void renderUI() {}
 
-            virtual void setupSDLOpenGL();
-
-            virtual void afterOpenGL() {};
-
-            virtual void processEvent(SDL_Event* event) {
-            }
+            virtual void processEvent(SDL_Event* event) {};
 
         };
     }
