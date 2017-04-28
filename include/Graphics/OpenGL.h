@@ -14,6 +14,10 @@ namespace Pancake {
             float x, y;
         };
 
+        struct VertexPositionTexture {
+            float x, y, u, v;
+        };
+
         struct VertexPositionColor {
             float x, y, r, g, b;
         };
