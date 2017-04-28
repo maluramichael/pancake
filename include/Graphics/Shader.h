@@ -8,6 +8,7 @@
 #include <GL/glew.h>
 #include <vector>
 #include <iostream>
+#include <map>
 
 namespace Pancake {
     namespace Graphics {
@@ -49,12 +50,18 @@ namespace Pancake {
                 return program;
             }
 
+            GLint getUniformLocation(std::string name) {
+                return glGetUniformLocation(shaderProgram, name.c_str());
+            }
+
             GLuint vertexShader = 0;
             GLuint fragmentShader = 0;
             GLuint shaderProgram = 0;
 
             std::string vertexShaderSource;
             std::string fragmentShaderSource;
+
+            std::map<std::string, GLuint> uniforms;
 
         public:
             Shader() {}
@@ -85,6 +92,24 @@ namespace Pancake {
 
             void end() {
                 glUseProgram(0);
+            }
+
+            void loadUniforms(std::vector<std::string> names) {
+                for (auto name: names) {
+                    uniforms[name] = (GLuint) getUniformLocation(name);
+                }
+            }
+
+            void set(std::string name, float x) {
+                glUniform1f(uniforms[name], x);
+            }
+
+            void set(std::string name, float x, float y) {
+                glUniform2f(uniforms[name], x, y);
+            }
+
+            void set(std::string name, float x, float y, float z) {
+                glUniform3f(uniforms[name], x, y, z);
             }
 
             GLuint getProgram() const {
