@@ -16,13 +16,14 @@ namespace Pancake {
         }
 
         void Painter::initialize() {
+            texture.generate();
 
             // Quad
-            std::vector<VertexPosition> quadVertices = {
-                    {-0.5f, 0.5f}, // top left
-                    {0.5f,  0.5f}, // top right
-                    {0.5f,  -0.5f}, // bottom right
-                    {-0.5f, -0.5f} // bottom left
+            std::vector<VertexPositionTexture> quadVertices = {
+                    {-0.5f, 0.5f,  0, 0}, // top left
+                    {0.5f,  0.5f,  1, 0}, // top right
+                    {0.5f,  -0.5f, 1, 1}, // bottom right
+                    {-0.5f, -0.5f, 0, 1} // bottom left
             };
 
             GLuint vbo;
@@ -37,29 +38,33 @@ namespace Pancake {
             // Shader
             const char* vsCode = "#version 150\n"
                     "\n"
+                    "//uniform vec2 world;\n"
                     "in vec2 position;\n"
-                    "//in vec3 color;\n"
-                    "//out vec3 Color;\n"
+                    "in vec2 textureCoordinate;\n"
+                    "out vec2 _textureCoordinate;\n"
                     "\n"
                     "void main()\n"
                     "{\n"
-                    "    //Color = color;\n"
+                    "    _textureCoordinate = textureCoordinate;\n"
+                    "    //vec2 pos = position * world;\n"
                     "    gl_Position = vec4(position, 0.0, 1.0);\n"
                     "}";
 
             std::string fsCode = "#version 150\n"
                     "\n"
-                    "//in vec3 Color;\n"
+                    "in vec2 _textureCoordinate;\n"
                     "out vec4 outColor;\n"
+                    "uniform sampler2D tex;\n"
                     "\n"
                     "void main()\n"
                     "{\n"
-                    "    outColor = vec4(1.0, 1.0, 1.0, 1.0);\n"
+                    "    outColor = texture(tex, _textureCoordinate) * vec4(1.0, 1.0, 1.0, 1.0);\n"
                     "}";
 
             shader.setFragmentShaderSource(fsCode);
             shader.setVertexShaderSource(vsCode);
             shader.load();
+            shader.loadUniforms(std::vector<std::string>{"world"});
             shader.begin();
             auto shaderProgram = shader.getProgram();
 
@@ -69,16 +74,17 @@ namespace Pancake {
                                                                              "position",
                                                                              2,
                                                                              GL_FLOAT,
-                                                                             2 * sizeof(float),
+                                                                             4 * sizeof(float),
                                                                              0);
-//            auto colAttrib = createVertexAttributePointer(shaderProgram,
-//                                                          "color",
-//                                                          3,
-//                                                          GL_FLOAT,
-//                                                          5 * sizeof(float),
-//                                                          2 * sizeof(float));
+
+            auto texAttirb = Pancake::Graphics::createVertexAttributePointer(shaderProgram,
+                                                                             "textureCoordinate",
+                                                                             2,
+                                                                             GL_FLOAT,
+                                                                             4 * sizeof(float),
+                                                                             2 * sizeof(float));
             glEnableVertexAttribArray(posAttrib);
-//            glEnableVertexAttribArray(colAttrib);
+            glEnableVertexAttribArray(texAttirb);
 
             GLuint elements[] = { // clock wise 2 triangles
                     0, 1, 2, // top left, top right, bottom right
@@ -251,12 +257,15 @@ namespace Pancake {
             return renderer;
         }
 
-        void Painter::drawQuad() {
+        void Painter::drawQuad(float x, float y) {
             glBindVertexArray(vertexArray);
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBuffer);
             shader.begin();
 
+//            shader.set("world", x, y);
+            texture.begin();
             glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+            texture.end();
 
             glBindVertexArray(0);
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);

@@ -23,6 +23,7 @@ namespace Pancake {
             PainterState currentState;
             Shader shader;
             GLuint vertexArray, elementBuffer;
+            Texture texture;
 
         public:
             Painter(SDL_Renderer* r);
@@ -75,7 +76,7 @@ namespace Pancake {
 
             void drawRectangle(float x, float y, float w, float h, int color);
 
-            void drawQuad();
+            void drawQuad(float x = 0, float y = 0);
 
             void setColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a);
 
