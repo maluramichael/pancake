@@ -76,6 +76,18 @@ int Pancake::Game::Game::init() {
     log->info("Load assets");
     loadAssets();
 
+    log->info("Register default keyboard actions");
+    keyboard.registerKeyPress(SDL_SCANCODE_ESCAPE, std::bind(&Pancake::Game::Game::quitGame, this));
+    keyboard.registerKeyPress(SDL_SCANCODE_F8, [this] {
+        this->setFullscreen(Pancake::Game::Game::WindowMode::WINDOWED);
+    });
+    keyboard.registerKeyPress(SDL_SCANCODE_F9, [this] {
+        this->setFullscreen(Pancake::Game::Game::WindowMode::FULLSCREEN_WINDOWED);
+    });
+    keyboard.registerKeyPress(SDL_SCANCODE_F10, [this] {
+        this->debug = !this->debug;
+    });
+
     log->info("Game initialized");
     initialized();
 
@@ -155,13 +167,14 @@ void Pancake::Game::Game::run() {
 
         float delta = timer.getTicks() / 1000.0f;
         update(delta);
+        if (debug) { updateUI(delta); }
         timer.start(); // restart time for next frame
 
         glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
         render();
-        ImGui::Render();
+        if (debug) { ImGui::Render(); }
 
         SDL_GL_SwapWindow(window);
         SDL_Delay(16);

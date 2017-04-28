@@ -99,6 +99,8 @@ namespace Pancake {
 
             virtual void update(float delta) {}
 
+            virtual void updateUI(float delta) {}
+
             virtual void render() {}
 
             virtual void renderUI() {}
