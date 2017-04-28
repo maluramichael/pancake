@@ -10,47 +10,46 @@
 #include <iomanip>
 #include <iostream>
 
+#include "Math.h"
 #include "Vector2.h"
 
 namespace Pancake {
     namespace Math {
+
         class Matrix {
         public:
-            Matrix() {
-                data = new float[16];
-                loadIdentity();
-            }
+            Matrix();
 
-            ~Matrix() {
-                delete[] data;
-            }
+            ~Matrix();
 
-            void loadIdentity() {
-                float d[] = {
-                        1, 0, 0, 0,
-                        0, 1, 0, 0,
-                        0, 0, 1, 0,
-                        0, 0, 0, 1,
-                };
-                memcpy(data, d, sizeof(float) * 16);
-            }
+            void loadIdentity();
 
-            void setTranslate(Vector2 v) {
+            static void translate(Pancake::Math::Matrix& m, Pancake::Math::Vector2 v);
 
-            }
+            static void scale(Pancake::Math::Matrix& m, Pancake::Math::Vector2 v);
 
-            void setScale(Vector2 v) {
+            static void rotateX(Pancake::Math::Matrix& m, float t);
 
-            }
+            static void rotateY(Pancake::Math::Matrix& m, float t);
 
-            void setRotation(Vector2 v) {
+            static void rotateZ(Pancake::Math::Matrix& m, float t);
 
-            }
+//            friend std::ostream& operator<<(std::ostream& stream, const Matrix& m);
 
-            friend std::ostream& operator<<(std::ostream& stream, const Matrix& m);
+            Matrix operator*(const Matrix& o);
+
+            float data[16] = {0};
+            float* firstRow[4];
+            float* secondRow[4];
+            float* thirdRow[4];
+            float* fourthRow[4];
+            float* firstColumn[4];
+            float* secondColumn[4];
+            float* thirdColumn[4];
+            float* fourthColumn[4];
 
         private:
-            float* data = nullptr;
+            float combineRowAndColumn(float* row, float* column);
         };
     }
 }

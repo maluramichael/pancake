@@ -8,6 +8,9 @@
 #include <math.h>
 #include <ostream>
 
+#include "Math.h"
+#include "Matrix.h"
+
 namespace Pancake {
     namespace Math {
 
@@ -53,7 +56,7 @@ namespace Pancake {
 
             Vector2 operator/(const float& o) const;
 
-            friend std::ostream& operator<<(std::ostream& stream, const Vector2& v);
+//            friend std::ostream& operator<<(std::ostream& stream, const Vector2& v);
 
             // Methods
             void move(float x, float y);
@@ -93,6 +96,8 @@ namespace Pancake {
             Vector2 interpolate(const Vector2& to, float t) const;
 
             Vector2 interpolateCosine(const Vector2& to, float t) const;
+
+            void apply(const Matrix& matrix);
         };
     }
 }

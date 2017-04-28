@@ -48,11 +48,11 @@ Pancake::Math::Vector2 Pancake::Math::Vector2::operator*(const float& o) const {
 Pancake::Math::Vector2 Pancake::Math::Vector2::operator/(const float& o) const {
     return Vector2(this->x / o, this->y / o);
 }
-
-std::ostream& Pancake::Math::operator<<(std::ostream& stream, const Pancake::Math::Vector2& v) {
-    stream << '(' << v.x << ',' << v.y << ')';
-    return stream;
-}
+//
+//std::ostream& Pancake::Math::Vector2::operator<<(std::ostream& stream, const Pancake::Math::Vector2& v) {
+//    stream << '(' << v.x << ',' << v.y << ')';
+//    return stream;
+//}
 
 void Pancake::Math::Vector2::move(float x, float y) {
     this->x += x;
@@ -180,4 +180,18 @@ Pancake::Math::Vector2 Pancake::Math::Vector2::interpolateCosine(const Pancake::
             Pancake::Math::interpolateCosine(this->x, to.x, t),
             Pancake::Math::interpolateCosine(this->y, to.y, t)
     );
+}
+
+void Pancake::Math::Vector2::apply(const Pancake::Math::Matrix& matrix) {
+    x = (matrix.data[0] * x) +
+        (matrix.data[1] * y) +
+        (matrix.data[2] * 1) +
+        (matrix.data[3] * 1);
+
+    y = (matrix.data[4] * x) +
+        (matrix.data[5] * y) +
+        (matrix.data[6] * 1) +
+        (matrix.data[7] * 1);
+//    x = matrix.data[8] * x + matrix.data[9] * y + matrix.data[10] * 1 + matrix.data[11] * 1;
+//    x = matrix.data[12] * x + matrix.data[13] * y + matrix.data[14] * 1 + matrix.data[15] * 1;
 }
