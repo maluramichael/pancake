@@ -55,6 +55,7 @@ namespace Pancake {
 
         private:
             bool quit = false;
+            bool debug = false;
             std::string title = "";
             WindowMode windowMode = WINDOWED;
             Pancake::Math::Vector2 resolution;
@@ -64,14 +65,23 @@ namespace Pancake {
             void destroy();
 
             virtual void beforeSDLInitialized() {}
+
             virtual void afterSDLInitialized() {}
+
             virtual void beforeWindowCreated() {}
+
             virtual void afterWindowCreated() {}
+
             virtual void beforeRendererCreated() {}
+
             virtual void afterRendererCreated() {}
+
             virtual void beforeOpenGLContextCreated() {}
+
             virtual void afterOpenGLContextCreated() {}
+
             virtual void beforeGLEWInit() {}
+
             virtual void afterGLEWInit() {}
 
 
@@ -90,6 +100,7 @@ namespace Pancake {
             virtual void update(float delta) {}
 
             virtual void render() {}
+
             virtual void renderUI() {}
 
             virtual void processEvent(SDL_Event* event) {};

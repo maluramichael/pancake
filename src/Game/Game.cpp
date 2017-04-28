@@ -2,7 +2,10 @@
 // Created by Michael Malura on 27/01/17.
 //
 
+#include <imgui.h>
+
 #include "../../include/Game/Game.h"
+#include "../../include/UI/imgui_impl_sdl_gl3.h"
 
 int Pancake::Game::Game::init() {
     Pancake::Log::initialize();
@@ -45,6 +48,13 @@ int Pancake::Game::Game::init() {
     }
     afterRendererCreated();
 
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
+    SDL_DisplayMode current;
+    SDL_GetCurrentDisplayMode(0, &current);
+
     beforeOpenGLContextCreated();
     glContext = SDL_GL_CreateContext(this->window);
     afterOpenGLContextCreated();
@@ -68,11 +78,18 @@ int Pancake::Game::Game::init() {
 
     log->info("Game initialized");
     initialized();
+
+    log->info("Initialize imgui");
+    ImGui_ImplSdlGL3_Init(window);
+
     return Pancake::Codes::OK;
 }
 
 void Pancake::Game::Game::destroy() {
     Pancake::LogHandle log = Pancake::Log::getInstance("GAME");
+
+    log->info("Shutdown imgui");
+    ImGui_ImplSdlGL3_Shutdown();
 
     beforeDestroy();
 
@@ -122,7 +139,7 @@ void Pancake::Game::Game::run() {
     /**
      * GAME LOOP
      */
-    while (!quit) {
+    do {
         SDL_Event event;
 
         while (SDL_PollEvent(&event)) {
@@ -132,23 +149,25 @@ void Pancake::Game::Game::run() {
                 quit = true;
             }
 
+            ImGui_ImplSdlGL3_ProcessEvent(&event);
         }
         keyboard.update(0);
-//        painter->clear(0, 0, 0, 255);
 
         float delta = timer.getTicks() / 1000.0f;
         update(delta);
         timer.start(); // restart time for next frame
 
-//        glPushMatrix();
-//        glTranslatef(camera.getLeft() - this->resolution.x * 0.5f, camera.getTop() - this->resolution.y * 0.5f, 0.0f);
+        glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+
         render();
-//        SDL_RenderPresent(renderer);
-//        glPopMatrix();
-//        SDL_Delay(1);
+        ImGui::Render();
+
+        SDL_GL_SwapWindow(window);
+        SDL_Delay(16);
 
         renderUI();
-    }
+    } while (!quit);
 
     log->info("Quit game");
     destroy();
