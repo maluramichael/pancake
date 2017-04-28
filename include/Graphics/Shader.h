@@ -10,6 +10,10 @@
 #include <iostream>
 #include <map>
 
+#include "../Math/Math.h"
+#include "../Math/Matrix.h"
+#include "../Math/Vector2.h"
+
 namespace Pancake {
     namespace Graphics {
         class Shader {
@@ -110,6 +114,10 @@ namespace Pancake {
 
             void set(std::string name, float x, float y, float z) {
                 glUniform3f(uniforms[name], x, y, z);
+            }
+
+            void set(std::string name, const Pancake::Math::Matrix& mat) {
+                glUniformMatrix4fv(uniforms[name], 1, GL_TRUE, mat.data);
             }
 
             GLuint getProgram() const {
