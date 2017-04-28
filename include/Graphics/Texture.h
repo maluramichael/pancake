@@ -5,6 +5,7 @@
 #include <SDL2/SDL_image.h>
 #include <string>
 #include <iostream>
+#include <GL/glew.h>
 
 #include "../Math/Vector2.h"
 
@@ -19,7 +20,13 @@ namespace Pancake {
             Math::Vector2 scale = Math::Vector2::One();
             float rotation = 0;
 
+            GLuint tex = 0;
+
+
         public:
+
+            Texture();
+
             Texture(SDL_Texture* texture);
 
             ~Texture();
@@ -42,6 +49,11 @@ namespace Pancake {
 
             void setRotation(float rotation);
 
+            void begin();
+
+            void end();
+
+            void generate();
 
         };
     }
