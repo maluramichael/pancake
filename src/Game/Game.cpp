@@ -167,7 +167,10 @@ void Pancake::Game::Game::run() {
 
         float delta = timer.getTicks() / 1000.0f;
         update(delta);
-        if (debug) { updateUI(delta); }
+        if (debug) {
+            ImGui_ImplSdlGL3_NewFrame(window);
+            updateUI(delta);
+        }
         timer.start(); // restart time for next frame
 
         glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
