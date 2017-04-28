@@ -2,8 +2,15 @@
 // Created by Michael Malura on 27/01/17.
 //
 
+// imgui
 #include <imgui.h>
 
+// devil
+#include <il.h>
+#include <ilu.h>
+#include <ilut.h>
+
+// pancake
 #include "../../include/Game/Game.h"
 #include "../../include/UI/imgui_impl_sdl_gl3.h"
 
@@ -37,16 +44,16 @@ int Pancake::Game::Game::init() {
     }
     afterWindowCreated();
 
-    beforeRendererCreated();
-    log->info("Create renderer");
-    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-    if (renderer == nullptr) {
-        log->error(SDL_GetError());
-        Pancake::cleanup(window);
-        SDL_Quit();
-        return Pancake::Codes::ERROR;
-    }
-    afterRendererCreated();
+//    beforeRendererCreated();
+//    log->info("Create renderer");
+//    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+//    if (renderer == nullptr) {
+//        log->error(SDL_GetError());
+//        Pancake::cleanup(window);
+//        SDL_Quit();
+//        return Pancake::Codes::ERROR;
+//    }
+//    afterRendererCreated();
 
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
@@ -67,8 +74,10 @@ int Pancake::Game::Game::init() {
     printf("OpenGL %s, GLSL %s\n", glGetString(GL_VERSION), glGetString(GL_SHADING_LANGUAGE_VERSION));
     afterGLEWInit();
 
+    printf("IL: %i IUL: %i\n", ilGetInteger(IL_VERSION_NUM), ilutGetInteger(ILUT_VERSION_NUM));
+
     log->info("Create painter");
-    painter = new Pancake::Graphics::Painter(renderer);
+    painter = new Pancake::Graphics::Painter();
 
     log->info("Create asset manager");
     assets = new Pancake::Game::Assets(painter);

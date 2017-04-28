@@ -7,15 +7,24 @@
 #include "../../include/Graphics/Painter.h"
 #include "../../include/Log.h"
 #include <GL/glew.h>
+#include <ilut.h>
+
 
 namespace Pancake {
     namespace Graphics {
 
-        Painter::Painter(SDL_Renderer* r) : renderer(r) {
+        Painter::Painter() {
             initialize();
         }
 
         void Painter::initialize() {
+            // Initialize DEVIL image library
+            ilInit();
+            iluInit();
+            ilutInit();
+            ilutRenderer(ILUT_OPENGL);
+            ilutEnable(ILUT_OPENGL_CONV);
+
             texture.generate();
 
             // Quad
@@ -36,7 +45,7 @@ namespace Pancake {
 
 
             // Shader
-            const char* vsCode = "#version 150\n"
+            const char *vsCode = "#version 150\n"
                     "\n"
                     "uniform mat4 mat;\n"
                     "in vec2 position;\n"
@@ -58,7 +67,7 @@ namespace Pancake {
                     "\n"
                     "void main()\n"
                     "{\n"
-                    "    outColor = texture(tex, _textureCoordinate) * vec4(1.0, 1.0, 1.0, 1.0);\n"
+                    "    outColor = texture(tex, _textureCoordinate) * vec4(1.0, 1.0, 0.0, 1.0);\n"
                     "}";
 
             shader.setFragmentShaderSource(fsCode);
@@ -102,162 +111,84 @@ namespace Pancake {
             glUseProgram(0);
         }
 
-        Texture* Painter::loadTexture(const std::string& file) {
+        Texture *Painter::loadTexture(const std::string &file) {
             std::cout << "Load texture: " << file << std::endl;
-            auto sdlTexture = IMG_LoadTexture(this->renderer, file.c_str());
-            if (sdlTexture == nullptr) {
-                Pancake::logSDLError(std::cout, "LoadTexture");
+
+            ILuint ilID;
+            ilGenImages(1, &ilID);
+            ilBindImage(ilID);
+            ilLoadImage(file.c_str());
+
+            auto width = ilGetInteger(IL_IMAGE_WIDTH);
+            auto height = ilGetInteger(IL_IMAGE_HEIGHT);
+            auto palette = ilGetInteger(IL_PALETTE_TYPE);
+            auto format = ilGetInteger(IL_IMAGE_FORMAT);
+            auto bpp = ilGetInteger(IL_IMAGE_BYTES_PER_PIXEL);
+            bool convertedPalette = ilGetBoolean(IL_CONV_PAL);
+
+            std::string paletteName = "";
+            std::string formatName = "";
+
+            switch (palette) {
+                case IL_PAL_NONE: paletteName = "IL_PAL_NONE"; break;
+                case IL_PAL_RGB24: paletteName = "IL_PAL_RGB24"; break;
+                case IL_PAL_RGB32: paletteName = "IL_PAL_RGB32"; break;
+                case IL_PAL_RGBA32: paletteName = "IL_PAL_RGBA32"; break;
+                case IL_PAL_BGR24: paletteName = "IL_PAL_BGR24"; break;
+                case IL_PAL_BGR32: paletteName = "IL_PAL_BGR32"; break;
+                case IL_PAL_BGRA32: paletteName = "IL_PAL_BGRA32"; break;
             }
 
-            auto texture = new Texture(sdlTexture);
+            switch (format) {
+                case IL_COLOR_INDEX: formatName = "IL_COLOR_INDEX"; break;
+                case IL_ALPHA: formatName = "IL_ALPHA"; break;
+                case IL_RGB: formatName = "IL_RGB"; break;
+                case IL_RGBA: formatName = "IL_RGBA"; break;
+                case IL_BGR: formatName = "IL_BGR"; break;
+                case IL_BGRA: formatName = "IL_BGRA"; break;
+                case IL_LUMINANCE: formatName = "IL_LUMINANCE"; break;
+                case IL_LUMINANCE_ALPHA: formatName = "IL_LUMINANCE_ALPHA"; break;
+            }
+
+            std::cout << "Converted: " << convertedPalette << " BPP: " << bpp << " Format: " << formatName << " Palette: " << paletteName << " (" << width << ", " << height << ")" << std::endl;
+
+            uint8_t *pixmap = new uint8_t[width * height * bpp];
+            ilCopyPixels(0, 0, 0, width, height, 1, format, IL_UNSIGNED_BYTE, pixmap);
+
+            for (int i = 0; i < width * height * bpp; i += bpp) {
+                std::cout << (int)pixmap[i] << ' ' << (int)pixmap[i + 1] << ' ' << (int)pixmap[i + 2] << ' ' << (int)pixmap[i + 3] << '\n';
+            }
+
+            ilBindImage(0);
+            ilDeleteImage(ilID);
+
+            GLuint glID;
+            glGenTextures(1, &glID);
+
+            glBindTexture(GL_TEXTURE_2D, glID);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+            float color[] = {1.0f, 0.0f, 0.0f, 1.0f};
+            glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, color);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+            glGenerateMipmap(GL_TEXTURE_2D);
+
+            glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, pixmap);
+
+            glBindTexture(GL_TEXTURE_2D, 0);
+
+            delete[] pixmap;
+
+            auto texture = new Texture(glID);
             texture->setFilename(file);
+//
+//            ilDeleteImages(1, &ilID);
 
             return texture;
         }
 
-        void Painter::drawTexture(const Texture& texture, float x, float y, float w, float h, float ox, float oy,
-                                  float rotation) {
-            SDL_Rect destination;
-            destination.x = x;
-            destination.y = y;
-            destination.w = w;
-            destination.h = h;
-
-            SDL_Point offset;
-            offset.x = ox;
-            offset.y = oy;
-
-            SDL_RenderCopyEx(this->renderer, texture.getTexture(), nullptr, &destination, rotation, &offset,
-                             SDL_RendererFlip::SDL_FLIP_NONE);
-        }
-
-        void Painter::drawTexture(const Texture& texture, float x, float y, float w, float h, float rotation) {
-            drawTexture(texture, x, y, w, h, 0, 0, rotation);
-        }
-
-        void Painter::drawTexture(const Texture& texture, float x, float y, float w, float h) {
-            drawTexture(texture, x, y, w, h, 0);
-        }
-
-        void Painter::drawTexture(const Texture& texture, float x, float y, float roation) {
-            drawTexture(texture, x, y, texture.getDimensions().x, texture.getDimensions().y, roation);
-        }
-
-        void Painter::drawTexture(const Texture& texture, float x, float y) {
-            drawTexture(texture, x, y, 0);
-        }
-
-        void Painter::drawLine(float x0, float y0, float x1, float y1) {
-            auto color = this->currentState.getColor();
-            aalineRGBA(this->renderer, x0, y0, x1, y1, color.red(), color.green(), color.blue(), color.alpha());
-            // SDL_RenderDrawLine(this->renderer,x0, y0, x1, y1);
-        }
-
-        void Painter::saveState() { currentState = PainterState(); }
-
-        void Painter::restoreState() {
-            auto color = this->currentState.getColor();
-            SDL_SetRenderDrawColor(this->renderer, color.red(), color.green(), color.blue(), color.alpha());
-        }
-
-        void Painter::setColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a) {
-            currentState.setColor((r << 24) | (g << 16) | (b << 8) | (a));
-            SDL_SetRenderDrawColor(renderer, r, g, b, a);
-        }
-
-        void Painter::drawRectangle(float x, float y, float w, float h) {
-            boxColor(renderer, x, y, x + w, y + h, currentState.getColor().getColor());
-        }
-
-        void Painter::drawPixel(float x, float y) {
-            pixelColor(renderer, x, y, currentState.getColor().getColor());
-        }
-
-        void Painter::drawRectangle(float x, float y, float w, float h, int color) {
-            boxColor(renderer, x, y, x + w, y + h, color);
-        }
-
-        void Painter::drawPixel(float x, float y, int color) {
-            pixelColor(renderer, x, y, color);
-        }
-
-        void Painter::clear(Uint8 r, Uint8 g, Uint8 b, Uint8 a) {
-            glClearColor(r, g, b, a);
-            glClear(GL_COLOR_BUFFER_BIT);
-        }
-
-        void Painter::drawTexture(const Texture& texture, const Math::Vector2& position) {
-            drawTexture(texture, position, Math::Vector2(1, 1));
-        }
-
-        void Painter::drawTexture(const Texture& texture, const Math::Vector2& position, const Math::Vector2& size) {
-            drawTexture(texture, position, size, 0);
-        }
-
-        void Painter::drawTexture(const Texture& texture, const Math::Vector2& position, const Math::Vector2& size,
-                                  float rotation) {
-            drawTexture(texture, position, size, rotation, Math::Vector2(0, 0));
-
-        }
-
-        void Painter::drawTexture(const Texture& texture, const Math::Vector2& position, const Math::Vector2& size,
-                                  float rotation, const Math::Vector2& origin) {
-            float w = texture.getDimensions().x * size.x;
-            float h = texture.getDimensions().y * size.y;
-
-            SDL_Point offset;
-            offset.x = origin.x * w;
-            offset.y = origin.y * h;
-
-            SDL_Rect destination;
-            destination.x = position.x - offset.x;
-            destination.y = position.y - offset.y;
-            destination.w = w;
-            destination.h = h;
-
-
-            SDL_RenderCopyEx(this->renderer, texture.getTexture(), nullptr, &destination, rotation, &offset,
-                             SDL_RendererFlip::SDL_FLIP_NONE);
-        }
-
-        void Painter::drawTexture(const Texture& texture) {
-
-        }
-
-        void Painter::drawLine(const Math::Vector2& from, const Math::Vector2& to) {
-            drawLine(from.x, from.y, to.x, to.y);
-        }
-
-        void Painter::drawPixel(const Math::Vector2& position) {
-            drawPixel(position.x, position.y);
-        }
-
-        void Painter::drawRectangle(const Math::Vector2& position, const Math::Vector2& size) {
-            drawRectangle(position.x, position.y, size.x, size.y);
-        }
-
-        void Painter::drawRawTexture(SDL_Texture* texture) {
-            SDL_Rect destination;
-            destination.x = 0;
-            destination.y = 0;
-
-            Uint32 format;
-            int access;
-            int w;
-            int h;
-            SDL_QueryTexture(texture, &format, &access, &w, &h);
-            destination.w = w;
-            destination.h = h;
-
-
-            SDL_RenderCopy(this->renderer, texture, nullptr, &destination);
-        }
-
-        SDL_Renderer* Painter::getRenderer() const {
-            return renderer;
-        }
-
-        void Painter::drawQuad(const Pancake::Math::Matrix& mat) {
+        void Painter::drawQuad(const Pancake::Math::Matrix &mat) {
             glBindVertexArray(vertexArray);
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBuffer);
 
@@ -271,6 +202,30 @@ namespace Pancake {
             glBindVertexArray(0);
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
             shader.end();
+        }
+
+        void Painter::drawTexture(const Math::Matrix &mat, Texture *texture) {
+            glBindVertexArray(vertexArray);
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBuffer);
+
+            shader.begin();
+            shader.set("mat", mat);
+
+            texture->begin();
+            glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+            texture->end();
+
+            glBindVertexArray(0);
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+            shader.end();
+        }
+
+        void Painter::shutdown() {
+            ilShutDown();
+        }
+
+        Painter::~Painter() {
+            shutdown();
         }
 
     }
