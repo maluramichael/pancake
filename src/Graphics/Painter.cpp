@@ -38,7 +38,7 @@ namespace Pancake {
             // Shader
             const char* vsCode = "#version 150\n"
                     "\n"
-                    "//uniform vec2 world;\n"
+                    "uniform mat4 mat;\n"
                     "in vec2 position;\n"
                     "in vec2 textureCoordinate;\n"
                     "out vec2 _textureCoordinate;\n"
@@ -47,7 +47,7 @@ namespace Pancake {
                     "{\n"
                     "    _textureCoordinate = textureCoordinate;\n"
                     "    //vec2 pos = position * world;\n"
-                    "    gl_Position = vec4(position, 0.0, 1.0);\n"
+                    "    gl_Position = mat * vec4(position, 0.0, 1.0);\n"
                     "}";
 
             std::string fsCode = "#version 150\n"
@@ -257,12 +257,13 @@ namespace Pancake {
             return renderer;
         }
 
-        void Painter::drawQuad(float x, float y) {
+        void Painter::drawQuad(const Pancake::Math::Matrix& mat) {
             glBindVertexArray(vertexArray);
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBuffer);
-            shader.begin();
 
-//            shader.set("world", x, y);
+            shader.begin();
+            shader.set("mat", mat);
+
             texture.begin();
             glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
             texture.end();

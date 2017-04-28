@@ -76,7 +76,7 @@ namespace Pancake {
 
             void drawRectangle(float x, float y, float w, float h, int color);
 
-            void drawQuad(float x = 0, float y = 0);
+            void drawQuad(const Pancake::Math::Matrix& mat);
 
             void setColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a);
 
