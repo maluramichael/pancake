@@ -51,6 +51,7 @@ namespace Pancake {
             if (texture != nullptr) {
                 SDL_DestroyTexture(texture);
             }
+            if (tex != 0) glDeleteTextures(1, &tex);
         }
 
         SDL_Texture* Texture::getTexture() const { return texture; }
