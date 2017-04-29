@@ -8,6 +8,11 @@
 #include "../../include/Log.h"
 #include <GL/glew.h>
 #include <ilut.h>
+#include <stb.h>
+
+#define STB_IMAGE_IMPLEMENTATION
+
+#include <stb_image.h>
 
 
 namespace Pancake {
@@ -19,11 +24,11 @@ namespace Pancake {
 
         void Painter::initialize() {
             // Initialize DEVIL image library
-            ilInit();
-            iluInit();
-            ilutInit();
-            ilutRenderer(ILUT_OPENGL);
-            ilutEnable(ILUT_OPENGL_CONV);
+//            ilInit();
+//            iluInit();
+//            ilutInit();
+//            ilutRenderer(ILUT_OPENGL);
+//            ilutEnable(ILUT_OPENGL_CONV);
 
             texture.generate();
 
@@ -114,53 +119,103 @@ namespace Pancake {
         Texture *Painter::loadTexture(const std::string &file) {
             std::cout << "Load texture: " << file << std::endl;
 
-            ILuint ilID;
-            ilGenImages(1, &ilID);
-            ilBindImage(ilID);
-            ilLoadImage(file.c_str());
+//            ILuint ilID;
+//            ilGenImages(1, &ilID);
+//            ilBindImage(ilID);
+//            ilLoadImage(file.c_str());
 
-            auto width = ilGetInteger(IL_IMAGE_WIDTH);
-            auto height = ilGetInteger(IL_IMAGE_HEIGHT);
-            auto palette = ilGetInteger(IL_PALETTE_TYPE);
-            auto format = ilGetInteger(IL_IMAGE_FORMAT);
-            auto bpp = ilGetInteger(IL_IMAGE_BYTES_PER_PIXEL);
-            bool convertedPalette = ilGetBoolean(IL_CONV_PAL);
+//            auto width = ilGetInteger(IL_IMAGE_WIDTH);
+//            auto height = ilGetInteger(IL_IMAGE_HEIGHT);
+//            auto palette = ilGetInteger(IL_PALETTE_TYPE);
+//            auto format = ilGetInteger(IL_IMAGE_FORMAT);
+//            auto bpp = ilGetInteger(IL_IMAGE_BYTES_PER_PIXEL);
+//            bool convertedPalette = ilGetBoolean(IL_CONV_PAL);
 
-            std::string paletteName = "";
-            std::string formatName = "";
+//            std::string paletteName = "";
+//            std::string formatName = "";
 
-            switch (palette) {
-                case IL_PAL_NONE: paletteName = "IL_PAL_NONE"; break;
-                case IL_PAL_RGB24: paletteName = "IL_PAL_RGB24"; break;
-                case IL_PAL_RGB32: paletteName = "IL_PAL_RGB32"; break;
-                case IL_PAL_RGBA32: paletteName = "IL_PAL_RGBA32"; break;
-                case IL_PAL_BGR24: paletteName = "IL_PAL_BGR24"; break;
-                case IL_PAL_BGR32: paletteName = "IL_PAL_BGR32"; break;
-                case IL_PAL_BGRA32: paletteName = "IL_PAL_BGRA32"; break;
+//            switch (palette) {
+//                case IL_PAL_NONE:
+//                    paletteName = "IL_PAL_NONE";
+//                    break;
+//                case IL_PAL_RGB24:
+//                    paletteName = "IL_PAL_RGB24";
+//                    break;
+//                case IL_PAL_RGB32:
+//                    paletteName = "IL_PAL_RGB32";
+//                    break;
+//                case IL_PAL_RGBA32:
+//                    paletteName = "IL_PAL_RGBA32";
+//                    break;
+//                case IL_PAL_BGR24:
+//                    paletteName = "IL_PAL_BGR24";
+//                    break;
+//                case IL_PAL_BGR32:
+//                    paletteName = "IL_PAL_BGR32";
+//                    break;
+//                case IL_PAL_BGRA32:
+//                    paletteName = "IL_PAL_BGRA32";
+//                    break;
+//            }
+
+//            switch (format) {
+//                case IL_COLOR_INDEX:
+//                    formatName = "IL_COLOR_INDEX";
+//                    break;
+//                case IL_ALPHA:
+//                    formatName = "IL_ALPHA";
+//                    break;
+//                case IL_RGB:
+//                    formatName = "IL_RGB";
+//                    break;
+//                case IL_RGBA:
+//                    formatName = "IL_RGBA";
+//                    break;
+//                case IL_BGR:
+//                    formatName = "IL_BGR";
+//                    break;
+//                case IL_BGRA:
+//                    formatName = "IL_BGRA";
+//                    break;
+//                case IL_LUMINANCE:
+//                    formatName = "IL_LUMINANCE";
+//                    break;
+//                case IL_LUMINANCE_ALPHA:
+//                    formatName = "IL_LUMINANCE_ALPHA";
+//                    break;
+//            }
+//
+//            std::cout << "Converted: " << convertedPalette << " BPP: " << bpp << " Format: " << formatName
+//                      << " Palette: " << paletteName << " (" << width << ", " << height << ")" << std::endl;
+
+//            uint8_t *pixmap = new uint8_t[width * height * bpp];
+//            ilCopyPixels(0, 0, 0, width, height, 1, format, IL_UNSIGNED_BYTE, pixmap);
+
+//            for (int i = 0; i < width * height * bpp; i += bpp) {
+//                std::cout << (int) pixmap[i] << ' ' << (int) pixmap[i + 1] << ' ' << (int) pixmap[i + 2] << ' '
+//                          << (int) pixmap[i + 3] << '\n';
+//            }
+
+//            ilBindImage(0);
+//            ilDeleteImage(ilID);
+            stbi_convert_iphone_png_to_rgb(1);
+            glPixelStorei(GL_UNPACK_ALIGNMENT, 0);
+            int x, y, n;
+            unsigned char *data = stbi_load(file.c_str(), &x, &y, &n, 4);
+
+            GLenum format;
+
+            switch (n) {
+                case 1:
+                    format = GL_ALPHA;
+                case 2:
+                    format = GL_ALPHA;
+                case 3:
+                    format = GL_RGB;
+                case 4:
+                default:
+                    format = GL_RGBA;
             }
-
-            switch (format) {
-                case IL_COLOR_INDEX: formatName = "IL_COLOR_INDEX"; break;
-                case IL_ALPHA: formatName = "IL_ALPHA"; break;
-                case IL_RGB: formatName = "IL_RGB"; break;
-                case IL_RGBA: formatName = "IL_RGBA"; break;
-                case IL_BGR: formatName = "IL_BGR"; break;
-                case IL_BGRA: formatName = "IL_BGRA"; break;
-                case IL_LUMINANCE: formatName = "IL_LUMINANCE"; break;
-                case IL_LUMINANCE_ALPHA: formatName = "IL_LUMINANCE_ALPHA"; break;
-            }
-
-            std::cout << "Converted: " << convertedPalette << " BPP: " << bpp << " Format: " << formatName << " Palette: " << paletteName << " (" << width << ", " << height << ")" << std::endl;
-
-            uint8_t *pixmap = new uint8_t[width * height * bpp];
-            ilCopyPixels(0, 0, 0, width, height, 1, format, IL_UNSIGNED_BYTE, pixmap);
-
-            for (int i = 0; i < width * height * bpp; i += bpp) {
-                std::cout << (int)pixmap[i] << ' ' << (int)pixmap[i + 1] << ' ' << (int)pixmap[i + 2] << ' ' << (int)pixmap[i + 3] << '\n';
-            }
-
-            ilBindImage(0);
-            ilDeleteImage(ilID);
 
             GLuint glID;
             glGenTextures(1, &glID);
@@ -174,17 +229,14 @@ namespace Pancake {
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
             glGenerateMipmap(GL_TEXTURE_2D);
 
-            glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, pixmap);
+            glTexImage2D(GL_TEXTURE_2D, 0, format, x, y, 0, format, GL_UNSIGNED_BYTE, data);
 
             glBindTexture(GL_TEXTURE_2D, 0);
 
-            delete[] pixmap;
+            stbi_image_free(data);
 
             auto texture = new Texture(glID);
             texture->setFilename(file);
-//
-//            ilDeleteImages(1, &ilID);
-
             return texture;
         }
 
