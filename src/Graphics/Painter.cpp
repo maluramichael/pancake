@@ -7,12 +7,12 @@
 #include "../../include/Graphics/Painter.h"
 #include "../../include/Log.h"
 #include <GL/glew.h>
-#include <ilut.h>
-#include <stb.h>
+
+#include "../../libs/stb/stb.h"
 
 #define STB_IMAGE_IMPLEMENTATION
 
-#include <stb_image.h>
+#include "../../libs/stb/stb_image.h"
 
 
 namespace Pancake {
@@ -60,7 +60,6 @@ namespace Pancake {
                     "void main()\n"
                     "{\n"
                     "    _textureCoordinate = textureCoordinate;\n"
-                    "    //vec2 pos = position * world;\n"
                     "    gl_Position = mat * vec4(position, 0.0, 1.0);\n"
                     "}";
 
@@ -72,7 +71,7 @@ namespace Pancake {
                     "\n"
                     "void main()\n"
                     "{\n"
-                    "    outColor = texture(tex, _textureCoordinate) * vec4(1.0, 1.0, 0.0, 1.0);\n"
+                    "    outColor = texture(tex, _textureCoordinate);\n"
                     "}";
 
             shader.setFragmentShaderSource(fsCode);
@@ -198,10 +197,11 @@ namespace Pancake {
 
 //            ilBindImage(0);
 //            ilDeleteImage(ilID);
-            stbi_convert_iphone_png_to_rgb(1);
-            glPixelStorei(GL_UNPACK_ALIGNMENT, 0);
+
+//            stbi_convert_iphone_png_to_rgb(1);
+//            glPixelStorei(GL_UNPACK_ALIGNMENT, 0);
             int x, y, n;
-            unsigned char *data = stbi_load(file.c_str(), &x, &y, &n, 4);
+            unsigned char *data = stbi_load(file.c_str(), &x, &y, &n, 0);
 
             GLenum format;
 
@@ -273,7 +273,6 @@ namespace Pancake {
         }
 
         void Painter::shutdown() {
-            ilShutDown();
         }
 
         Painter::~Painter() {

@@ -5,11 +5,6 @@
 // imgui
 #include <imgui.h>
 
-// devil
-#include <il.h>
-#include <ilu.h>
-#include <ilut.h>
-
 // pancake
 #include "../../include/Game/Game.h"
 #include "../../include/UI/imgui_impl_sdl_gl3.h"
@@ -73,8 +68,6 @@ int Pancake::Game::Game::init() {
     }
     printf("OpenGL %s, GLSL %s\n", glGetString(GL_VERSION), glGetString(GL_SHADING_LANGUAGE_VERSION));
     afterGLEWInit();
-
-    printf("IL: %i IUL: %i\n", ilGetInteger(IL_VERSION_NUM), ilutGetInteger(ILUT_VERSION_NUM));
 
     log->info("Create painter");
     painter = new Pancake::Graphics::Painter();

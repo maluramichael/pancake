@@ -5,7 +5,6 @@
 #include <SDL2/SDL_image.h>
 #include <string>
 #include <iostream>
-#include <il.h>
 #include <GL/glew.h>
 
 #include "../Math/Vector2.h"

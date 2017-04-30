@@ -14,10 +14,6 @@
 #include "OpenGL.h"
 #include "Shader.h"
 
-#define ILUT_USE_OPENGL
-
-#include <ilut.h>
-
 
 namespace Pancake {
     namespace Graphics {
