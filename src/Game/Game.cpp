@@ -69,6 +69,10 @@ int Pancake::Game::Game::init() {
     printf("OpenGL %s, GLSL %s\n", glGetString(GL_VERSION), glGetString(GL_SHADING_LANGUAGE_VERSION));
     afterGLEWInit();
 
+    // Set opengl settings
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
     log->info("Create painter");
     painter = new Pancake::Graphics::Painter();
 
