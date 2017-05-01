@@ -120,6 +120,10 @@ namespace Pancake {
                 glUniformMatrix4fv(uniforms[name], 1, GL_TRUE, mat.data);
             }
 
+            void set(std::string name, const float* const mat) {
+                glUniformMatrix4fv(uniforms[name], 1, GL_FALSE, mat);
+            }
+
             GLuint getProgram() const {
                 return shaderProgram;
             }
