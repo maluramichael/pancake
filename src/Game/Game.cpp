@@ -217,3 +217,11 @@ void Pancake::Game::Game::setFullscreen(WindowMode mode) {
     SDL_GetWindowSize(this->window, &w, &h);
     this->resolution = Pancake::Math::Vector2(w, h);
 }
+
+void Pancake::Game::Game::toggleDebug() {
+    debug = !debug;
+}
+
+void Pancake::Game::Game::setDebug(bool debug) {
+    this->debug = debug;
+}

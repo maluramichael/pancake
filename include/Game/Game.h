@@ -53,6 +53,10 @@ namespace Pancake {
             SDL_Renderer* renderer = nullptr;
             SDL_GLContext glContext = nullptr;
 
+            void toggleDebug();
+
+            void setDebug(bool debug);
+
         private:
             bool quit = false;
             bool debug = false;
