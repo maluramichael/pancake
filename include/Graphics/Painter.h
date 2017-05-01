@@ -7,7 +7,13 @@
 #include <string>
 #include <vector>
 #include <GL/glew.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/common.hpp>
+#include <glm/vector_relational.hpp>
 
+#include "../Math/Matrix.h"
 #include "../Math/Vector2.h"
 #include "PainterState.h"
 #include "Texture.h"
@@ -24,6 +30,7 @@ namespace Pancake {
             Shader shader;
             GLuint vertexArray, elementBuffer;
             Texture texture;
+            glm::mat4 view;
 
         public:
             Painter();
@@ -34,11 +41,13 @@ namespace Pancake {
 
             void shutdown();
 
-            Texture *loadTexture(const std::string &file);
+            Texture* loadTexture(const std::string& file);
 
-            void drawQuad(const Pancake::Math::Matrix &mat);
+            void drawQuad(const Pancake::Math::Matrix& mat);
 
-            void drawTexture(const Pancake::Math::Matrix &mat, Pancake::Graphics::Texture *texture);
+            void drawTexture(const Pancake::Math::Matrix& mat, Pancake::Graphics::Texture* texture);
+
+            void drawTexture(const glm::mat4& mat, Pancake::Graphics::Texture* texture);
 
         };
     }

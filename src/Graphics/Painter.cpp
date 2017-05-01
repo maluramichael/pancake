@@ -23,21 +23,16 @@ namespace Pancake {
         }
 
         void Painter::initialize() {
-            // Initialize DEVIL image library
-//            ilInit();
-//            iluInit();
-//            ilutInit();
-//            ilutRenderer(ILUT_OPENGL);
-//            ilutEnable(ILUT_OPENGL_CONV);
 
+            view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0));
             texture.generate();
 
             // Quad
             std::vector<VertexPositionTexture> quadVertices = {
-                    {-0.5f, 0.5f,  0, 0}, // top left
-                    {0.5f,  0.5f,  1, 0}, // top right
-                    {0.5f,  -0.5f, 1, 1}, // bottom right
-                    {-0.5f, -0.5f, 0, 1} // bottom left
+                    {-0.5f, 0.5f,  0, 0, 0}, // top left
+                    {0.5f,  0.5f,  0, 1, 0}, // top right
+                    {0.5f,  -0.5f, 0, 1, 1}, // bottom right
+                    {-0.5f, -0.5f, 0, 0, 1} // bottom left
             };
 
             GLuint vbo;
@@ -49,18 +44,18 @@ namespace Pancake {
                          GL_STATIC_DRAW);
 
 
-            // Shader
-            const char *vsCode = "#version 150\n"
+            // Quad shader
+            const char* vsCode = "#version 150\n"
                     "\n"
                     "uniform mat4 mat;\n"
-                    "in vec2 position;\n"
+                    "in vec3 position;\n"
                     "in vec2 textureCoordinate;\n"
                     "out vec2 _textureCoordinate;\n"
                     "\n"
                     "void main()\n"
                     "{\n"
                     "    _textureCoordinate = textureCoordinate;\n"
-                    "    gl_Position = mat * vec4(position, 0.0, 1.0);\n"
+                    "    gl_Position = mat * vec4(position, 1.0);\n"
                     "}";
 
             std::string fsCode = "#version 150\n"
@@ -85,17 +80,17 @@ namespace Pancake {
             glBindVertexArray(vertexArray);
             auto posAttrib = Pancake::Graphics::createVertexAttributePointer(shaderProgram,
                                                                              "position",
-                                                                             2,
+                                                                             3,
                                                                              GL_FLOAT,
-                                                                             4 * sizeof(float),
+                                                                             5 * sizeof(float),
                                                                              0);
 
             auto texAttirb = Pancake::Graphics::createVertexAttributePointer(shaderProgram,
                                                                              "textureCoordinate",
                                                                              2,
                                                                              GL_FLOAT,
-                                                                             4 * sizeof(float),
-                                                                             2 * sizeof(float));
+                                                                             5 * sizeof(float),
+                                                                             3 * sizeof(float));
             glEnableVertexAttribArray(posAttrib);
             glEnableVertexAttribArray(texAttirb);
 
@@ -108,6 +103,7 @@ namespace Pancake {
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBuffer);
             glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(elements), elements, GL_STATIC_DRAW);
 
+            shader.set("view", glm::value_ptr(view));
             shader.end();
 
             glBindVertexArray(0);
@@ -115,93 +111,11 @@ namespace Pancake {
             glUseProgram(0);
         }
 
-        Texture *Painter::loadTexture(const std::string &file) {
+        Texture* Painter::loadTexture(const std::string& file) {
             std::cout << "Load texture: " << file << std::endl;
 
-//            ILuint ilID;
-//            ilGenImages(1, &ilID);
-//            ilBindImage(ilID);
-//            ilLoadImage(file.c_str());
-
-//            auto width = ilGetInteger(IL_IMAGE_WIDTH);
-//            auto height = ilGetInteger(IL_IMAGE_HEIGHT);
-//            auto palette = ilGetInteger(IL_PALETTE_TYPE);
-//            auto format = ilGetInteger(IL_IMAGE_FORMAT);
-//            auto bpp = ilGetInteger(IL_IMAGE_BYTES_PER_PIXEL);
-//            bool convertedPalette = ilGetBoolean(IL_CONV_PAL);
-
-//            std::string paletteName = "";
-//            std::string formatName = "";
-
-//            switch (palette) {
-//                case IL_PAL_NONE:
-//                    paletteName = "IL_PAL_NONE";
-//                    break;
-//                case IL_PAL_RGB24:
-//                    paletteName = "IL_PAL_RGB24";
-//                    break;
-//                case IL_PAL_RGB32:
-//                    paletteName = "IL_PAL_RGB32";
-//                    break;
-//                case IL_PAL_RGBA32:
-//                    paletteName = "IL_PAL_RGBA32";
-//                    break;
-//                case IL_PAL_BGR24:
-//                    paletteName = "IL_PAL_BGR24";
-//                    break;
-//                case IL_PAL_BGR32:
-//                    paletteName = "IL_PAL_BGR32";
-//                    break;
-//                case IL_PAL_BGRA32:
-//                    paletteName = "IL_PAL_BGRA32";
-//                    break;
-//            }
-
-//            switch (format) {
-//                case IL_COLOR_INDEX:
-//                    formatName = "IL_COLOR_INDEX";
-//                    break;
-//                case IL_ALPHA:
-//                    formatName = "IL_ALPHA";
-//                    break;
-//                case IL_RGB:
-//                    formatName = "IL_RGB";
-//                    break;
-//                case IL_RGBA:
-//                    formatName = "IL_RGBA";
-//                    break;
-//                case IL_BGR:
-//                    formatName = "IL_BGR";
-//                    break;
-//                case IL_BGRA:
-//                    formatName = "IL_BGRA";
-//                    break;
-//                case IL_LUMINANCE:
-//                    formatName = "IL_LUMINANCE";
-//                    break;
-//                case IL_LUMINANCE_ALPHA:
-//                    formatName = "IL_LUMINANCE_ALPHA";
-//                    break;
-//            }
-//
-//            std::cout << "Converted: " << convertedPalette << " BPP: " << bpp << " Format: " << formatName
-//                      << " Palette: " << paletteName << " (" << width << ", " << height << ")" << std::endl;
-
-//            uint8_t *pixmap = new uint8_t[width * height * bpp];
-//            ilCopyPixels(0, 0, 0, width, height, 1, format, IL_UNSIGNED_BYTE, pixmap);
-
-//            for (int i = 0; i < width * height * bpp; i += bpp) {
-//                std::cout << (int) pixmap[i] << ' ' << (int) pixmap[i + 1] << ' ' << (int) pixmap[i + 2] << ' '
-//                          << (int) pixmap[i + 3] << '\n';
-//            }
-
-//            ilBindImage(0);
-//            ilDeleteImage(ilID);
-
-//            stbi_convert_iphone_png_to_rgb(1);
-//            glPixelStorei(GL_UNPACK_ALIGNMENT, 0);
             int x, y, n;
-            unsigned char *data = stbi_load(file.c_str(), &x, &y, &n, 0);
+            unsigned char* data = stbi_load(file.c_str(), &x, &y, &n, 0);
 
             GLenum format;
 
@@ -240,7 +154,7 @@ namespace Pancake {
             return texture;
         }
 
-        void Painter::drawQuad(const Pancake::Math::Matrix &mat) {
+        void Painter::drawQuad(const Pancake::Math::Matrix& mat) {
             glBindVertexArray(vertexArray);
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBuffer);
 
@@ -256,13 +170,12 @@ namespace Pancake {
             shader.end();
         }
 
-        void Painter::drawTexture(const Math::Matrix &mat, Texture *texture) {
+        void Painter::drawTexture(const Math::Matrix& mat, Texture* texture) {
             glBindVertexArray(vertexArray);
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBuffer);
 
             shader.begin();
             shader.set("mat", mat);
-
             texture->begin();
             glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
             texture->end();
@@ -277,6 +190,27 @@ namespace Pancake {
 
         Painter::~Painter() {
             shutdown();
+        }
+
+        /**
+         * Currently this methods needs a full matrix (model, view and projection).
+         * Later i want to the user to just pass a model matrix or some basic x,y,z coordinates and handle all the
+         * projection and camera stuff inside the painter.
+         */
+        void Painter::drawTexture(const glm::mat4& mat, Pancake::Graphics::Texture* texture) {
+            glBindVertexArray(vertexArray);
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBuffer);
+
+            shader.begin();
+            shader.set("mat", glm::value_ptr(mat));
+
+            texture->begin();
+            glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+            texture->end();
+
+            glBindVertexArray(0);
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+            shader.end();
         }
 
     }
