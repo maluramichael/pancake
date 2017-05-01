@@ -20,6 +20,8 @@ namespace Pancake {
         public:
             Matrix();
 
+            Matrix(const Matrix& o);
+
             ~Matrix();
 
             void loadIdentity();
@@ -34,9 +36,14 @@ namespace Pancake {
 
             static void rotateZ(Pancake::Math::Matrix& m, float t);
 
+            static void ortho(Pancake::Math::Matrix& m, float left, float right, float bottom, float top, float near, float far);
+
+
 //            friend std::ostream& operator<<(std::ostream& stream, const Matrix& m);
 
             Matrix operator*(const Matrix& o);
+
+            void multiply(const Matrix& o);
 
             float data[16] = {0};
             float* firstRow[4];

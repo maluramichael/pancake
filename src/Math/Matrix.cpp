@@ -1,10 +1,70 @@
 //
-// Created by Michael Malura on 28/04/17.
-//
 
 #include "../../include/Math/Matrix.h"
 
 
+//}
+
+void Pancake::Math::Matrix::translate(Pancake::Math::Matrix& m, Pancake::Math::Vector2 v) {
+    m.loadIdentity();
+    m.data[3] = v.x;
+    m.data[7] = v.y;
+}
+
+void Pancake::Math::Matrix::scale(Pancake::Math::Matrix& m, Pancake::Math::Vector2 v) {
+    m.loadIdentity();
+    m.data[0] = v.x;
+    m.data[5] = v.y;
+}
+
+void Pancake::Math::Matrix::rotateX(Pancake::Math::Matrix& m, float t) {
+    m.loadIdentity();
+    m.data[5] = cos(t);
+    m.data[6] = -(sin(t));
+    m.data[9] = sin(t);
+    m.data[10] = cos(t);
+}
+
+void Pancake::Math::Matrix::rotateY(Pancake::Math::Matrix& m, float t) {
+    m.loadIdentity();
+    m.data[0] = cos(t);
+    m.data[2] = sin(t);
+    m.data[8] = -(sin(t));
+    m.data[10] = cos(t);
+}
+
+void Pancake::Math::Matrix::rotateZ(Pancake::Math::Matrix& m, float t) {
+    m.loadIdentity();
+    m.data[0] = cos(t);
+    m.data[1] = -(sin(t));
+    m.data[5] = sin(t);
+    m.data[6] = cos(t);
+}
+
+void Pancake::Math::Matrix::ortho(Pancake::Math::Matrix& m,
+                                  float left, float right,
+                                  float bottom, float top,
+                                  float near, float far) {
+    m.loadIdentity();
+    m.data[0] = 2 / (right - left);
+    m.data[3] = -((right + left) / (right - left));
+    m.data[5] = 2 / (top - bottom);
+    m.data[7] = -((top + bottom) - (top - bottom));
+    m.data[9] = (-2) / (far - near);
+    m.data[10] = -((far + near) / (far - near));
+
+}
+
+
+float Pancake::Math::Matrix::combineRowAndColumn(float* row, float* column) {
+    return (row[0] * column[0]) +
+           (row[1] * column[1]) +
+           (row[2] * column[2]) +
+           (row[3] * column[3]);
+}
+
+//
+// Created by Michael Malura on 28/04/17.
 //std::ostream& Pancake::Math::Matrix::operator<<(std::ostream& stream, const Pancake::Math::Matrix& m) {
 //    short width = 1;
 //
@@ -64,45 +124,39 @@
 //    std::cout << "]\n";
 //
 //    return stream;
-//}
-
-void Pancake::Math::Matrix::translate(Pancake::Math::Matrix& m, Pancake::Math::Vector2 v) {
-    m.data[3] = v.x;
-    m.data[7] = v.y;
+Pancake::Math::Matrix::Matrix(const Pancake::Math::Matrix& o) {
+    memcpy(this->data, o.data, 16 * sizeof(float));
 }
 
-void Pancake::Math::Matrix::scale(Pancake::Math::Matrix& m, Pancake::Math::Vector2 v) {
-    m.data[0] = v.x;
-    m.data[5] = v.y;
-}
+void Pancake::Math::Matrix::multiply(const Pancake::Math::Matrix& o) {
 
-void Pancake::Math::Matrix::rotateX(Pancake::Math::Matrix& m, float t) {
-    m.data[5] = cos(t);
-    m.data[6] = -(sin(t));
-    m.data[9] = sin(t);
-    m.data[10] = cos(t);
-}
+    Matrix m(*this);
 
-void Pancake::Math::Matrix::rotateY(Pancake::Math::Matrix& m, float t) {
-    m.data[0] = cos(t);
-    m.data[2] = sin(t);
-    m.data[8] = -(sin(t));
-    m.data[10] = cos(t);
-}
+    // first row
+    m.data[0] = combineRowAndColumn(this->firstRow[0], o.firstColumn[0]);
+    m.data[1] = combineRowAndColumn(this->firstRow[0], o.secondColumn[0]);
+    m.data[2] = combineRowAndColumn(this->firstRow[0], o.thirdColumn[0]);
+    m.data[3] = combineRowAndColumn(this->firstRow[0], o.fourthColumn[0]);
 
-void Pancake::Math::Matrix::rotateZ(Pancake::Math::Matrix& m, float t) {
-    m.data[0] = cos(t);
-    m.data[1] = -(sin(t));
-    m.data[5] = sin(t);
-    m.data[6] = cos(t);
-}
+    // second row
+    m.data[4] = combineRowAndColumn(this->secondRow[0], o.firstColumn[0]);
+    m.data[5] = combineRowAndColumn(this->secondRow[0], o.secondColumn[0]);
+    m.data[6] = combineRowAndColumn(this->secondRow[0], o.thirdColumn[0]);
+    m.data[7] = combineRowAndColumn(this->secondRow[0], o.fourthColumn[0]);
 
+    // third row
+    m.data[8] = combineRowAndColumn(this->thirdRow[0], o.firstColumn[0]);
+    m.data[9] = combineRowAndColumn(this->thirdRow[0], o.secondColumn[0]);
+    m.data[10] = combineRowAndColumn(this->thirdRow[0], o.thirdColumn[0]);
+    m.data[11] = combineRowAndColumn(this->thirdRow[0], o.fourthColumn[0]);
 
-float Pancake::Math::Matrix::combineRowAndColumn(float* row, float* column) {
-    return (row[0] * column[0]) +
-           (row[1] * column[1]) +
-           (row[2] * column[2]) +
-           (row[3] * column[3]);
+    // fourth row
+    m.data[12] = combineRowAndColumn(this->fourthRow[0], o.firstColumn[0]);
+    m.data[13] = combineRowAndColumn(this->fourthRow[0], o.secondColumn[0]);
+    m.data[14] = combineRowAndColumn(this->fourthRow[0], o.thirdColumn[0]);
+    m.data[15] = combineRowAndColumn(this->fourthRow[0], o.fourthColumn[0]);
+
+    memcpy(this->data, m.data, 16 * sizeof(float));
 }
 
 Pancake::Math::Matrix Pancake::Math::Matrix::operator*(const Pancake::Math::Matrix& o) {
