@@ -117,7 +117,7 @@ namespace Pancake {
             }
 
             void set(std::string name, const Pancake::Math::Matrix& mat) {
-                glUniformMatrix4fv(uniforms[name], 1, GL_TRUE, mat.data);
+                glUniformMatrix4fv(uniforms[name], 1, GL_FALSE, mat.data);
             }
 
             void set(std::string name, const float* const mat) {

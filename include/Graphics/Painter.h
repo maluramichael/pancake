@@ -13,8 +13,10 @@
 #include <glm/common.hpp>
 #include <glm/vector_relational.hpp>
 
+#include "../Game/Camera.h"
 #include "../Math/Matrix.h"
 #include "../Math/Vector2.h"
+#include "../Math/Rect.h"
 #include "PainterState.h"
 #include "Texture.h"
 #include "OpenGL.h"
@@ -27,13 +29,17 @@ namespace Pancake {
         class Painter {
         private:
             PainterState currentState;
-            Shader shader;
-            GLuint vertexArray, elementBuffer;
+
+            // Quad
+            Shader quadShader;
+            GLuint quadVA, quadEB;
             Texture texture;
-            glm::mat4 view;
+
+            Pancake::Game::Camera& camera;
+            Pancake::Math::Rect& screen;
 
         public:
-            Painter();
+            Painter(Pancake::Game::Camera& camera, Math::Rect& screen);
 
             ~Painter();
 
@@ -45,9 +51,9 @@ namespace Pancake {
 
             void drawQuad(const Pancake::Math::Matrix& mat);
 
-            void drawTexture(const Pancake::Math::Matrix& mat, Pancake::Graphics::Texture* texture);
-
             void drawTexture(const glm::mat4& mat, Pancake::Graphics::Texture* texture);
+
+            void drawTexture(const glm::mat4& mat);
 
         };
     }

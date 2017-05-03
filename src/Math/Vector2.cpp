@@ -17,6 +17,10 @@ Pancake::Math::Vector2::Vector2(float x, float y) : x(x), y(y) {
 
 }
 
+Pancake::Math::Vector2::Vector2(int x, int y) : x(x), y(y) {
+
+}
+
 Pancake::Math::Vector2 Pancake::Math::Vector2::operator+(const Pancake::Math::Vector2& o) const {
     return Vector2(this->x + o.x, this->y + o.y);
 }

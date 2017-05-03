@@ -15,13 +15,10 @@ FIND_PACKAGE(SDL2_mixer REQUIRED)
 
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
-#INCLUDE_DIRECTORIES(${IL_INCLUDE_DIR})
-#INCLUDE_DIRECTORIES(${ILU_INCLUDE_DIR})
-#INCLUDE_DIRECTORIES(${ILUT_INCLUDE_DIR})
-INCLUDE_DIRECTORIES(${OpenGL_INCLUDE_DIR})
 INCLUDE_DIRECTORIES(${GLM_INCLUDE_DIR})
+INCLUDE_DIRECTORIES(${OPENGL_INCLUDE_DIR})
 INCLUDE_DIRECTORIES(${GLEW_INCLUDE_DIR})
-INCLUDE_DIRECTORIES(${SDL2_INCLUDE_DIR})
+INCLUDE_DIRECTORIES(${SDL_INCLUDE_DIR})
 INCLUDE_DIRECTORIES(${SDL2_IMAGE_INCLUDE_DIR})
 INCLUDE_DIRECTORIES(${SDLMIXER_INCLUDE_DIR})
 
@@ -29,32 +26,36 @@ INCLUDE_DIRECTORIES(libs/json/src)
 INCLUDE_DIRECTORIES(libs/stb)
 INCLUDE_DIRECTORIES(libs/imgui)
 
-FILE(GLOB HEADERS 
-    include/*.h
-    include/Graphics/*.h
-    include/Images/*.h
-    include/UI/*.h
-    include/Game/*.h
-    include/Menu/*.h
-    include/Particles/*.h
-    include/Math/*.h
+MESSAGE("SDL: ${SDL_INCLUDE_DIR}")
+MESSAGE("GL: ${OPENGL_INCLUDE_DIR}")
+MESSAGE("GLEW: ${GLEW_INCLUDE_DIR}")
 
-    libs/imgui/*.h
-    libs/stb/*.h
-)
+FILE(GLOB HEADERS
+        include/*.h
+        include/Graphics/*.h
+        include/Images/*.h
+        include/UI/*.h
+        include/Game/*.h
+        include/Menu/*.h
+        include/Particles/*.h
+        include/Math/*.h
 
-FILE(GLOB SOURCES 
-    src/*.cpp
-    src/Graphics/*.cpp
-    src/Images/*.cpp
-    src/UI/*.cpp
-    src/Game/*.cpp
-    src/Menu/*.cpp
-    src/Particles/*.cpp
-    src/Math/*.cpp
+        libs/imgui/*.h
+        libs/stb/*.h
+        )
 
-    libs/imgui/*.cpp
-)
+FILE(GLOB SOURCES
+        src/*.cpp
+        src/Graphics/*.cpp
+        src/Images/*.cpp
+        src/UI/*.cpp
+        src/Game/*.cpp
+        src/Menu/*.cpp
+        src/Particles/*.cpp
+        src/Math/*.cpp
+
+        libs/imgui/*.cpp
+        )
 
 FILE(GLOB IMGUI_HEADER libs/imgui/*.h)
 

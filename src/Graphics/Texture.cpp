@@ -35,8 +35,8 @@ namespace Pancake {
 
             // Black/white checkerboard
             float pixels[] = {
-                    0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f,
-                    1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f
+                    1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+                    0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f
             };
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 2, 2, 0, GL_RGB, GL_FLOAT, pixels);
             end();
@@ -50,5 +50,13 @@ namespace Pancake {
         void Texture::setFilename(const std::string& filename) { Texture::filename = filename; }
 
         const std::string& Texture::getFilename() const { return filename; }
+
+        const Math::Vector2& Texture::getDimensions() const {
+            return dimensions;
+        }
+
+        void Texture::setDimensions(Math::Vector2 dimensions) {
+            Texture::dimensions = dimensions;
+        }
     }
 }

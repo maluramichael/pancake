@@ -15,6 +15,7 @@ namespace Pancake {
         private:
             std::string filename = "";
             GLuint id = 0;
+            Pancake::Math::Vector2 dimensions;
 
         public:
 
@@ -23,6 +24,10 @@ namespace Pancake {
             Texture(GLuint id);
 
             ~Texture();
+
+            const Math::Vector2& getDimensions() const;
+
+            void setDimensions(Math::Vector2 dimensions);
 
             void setFilename(const std::string &filename);
 

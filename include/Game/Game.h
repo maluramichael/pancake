@@ -45,6 +45,7 @@ namespace Pancake {
 
         protected:
             Pancake::Game::Camera camera;
+            Pancake::Math::Rect screen;
             Pancake::Graphics::Painter* painter = nullptr;
             Pancake::Game::Assets* assets = nullptr;
             Keyboard keyboard;
@@ -62,7 +63,6 @@ namespace Pancake {
             bool debug = false;
             std::string title = "";
             WindowMode windowMode = WINDOWED;
-            Pancake::Math::Vector2 resolution;
 
             int init();
 

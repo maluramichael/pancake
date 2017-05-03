@@ -11,9 +11,10 @@ namespace Pancake {
     namespace Math {
         class Rect {
         private:
-            float x, y, w, h;
 
         public:
+            float x, y, w, h;
+
             Rect();
 
             Rect(Vector2 position, Vector2 size);

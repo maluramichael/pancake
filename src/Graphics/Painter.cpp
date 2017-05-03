@@ -1,6 +1,7 @@
 //
 // Created by Michael Malura on 22/11/16.
 //
+#include <imgui.h>
 
 #include <SDL2/SDL2_gfxPrimitives.h>
 
@@ -18,21 +19,19 @@
 namespace Pancake {
     namespace Graphics {
 
-        Painter::Painter() {
+        Painter::Painter(Pancake::Game::Camera& camera, Math::Rect& screen) : camera(camera), screen(screen) {
             initialize();
         }
 
         void Painter::initialize() {
-
-            view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0));
             texture.generate();
 
             // Quad
             std::vector<VertexPositionTexture> quadVertices = {
-                    {-0.5f, 0.5f,  0, 0, 0}, // top left
-                    {0.5f,  0.5f,  0, 1, 0}, // top right
-                    {0.5f,  -0.5f, 0, 1, 1}, // bottom right
-                    {-0.5f, -0.5f, 0, 0, 1} // bottom left
+                    {0, 1, 0, 0, 1}, // top let
+                    {1, 1, 0, 1, 1}, // top right
+                    {1, 0, 0, 1, 0}, // bottom right
+                    {0, 0, 0, 0, 0}  // bottom let
             };
 
             GLuint vbo;
@@ -69,15 +68,15 @@ namespace Pancake {
                     "    outColor = texture(tex, _textureCoordinate);\n"
                     "}";
 
-            shader.setFragmentShaderSource(fsCode);
-            shader.setVertexShaderSource(vsCode);
-            shader.load();
-            shader.loadUniforms(std::vector<std::string>{"world"});
-            shader.begin();
-            auto shaderProgram = shader.getProgram();
+            quadShader.setFragmentShaderSource(fsCode);
+            quadShader.setVertexShaderSource(vsCode);
+            quadShader.load();
+            quadShader.loadUniforms(std::vector<std::string>{"world"});
+            quadShader.begin();
+            auto shaderProgram = quadShader.getProgram();
 
-            vertexArray = createVertexArray();
-            glBindVertexArray(vertexArray);
+            quadVA = createVertexArray();
+            glBindVertexArray(quadVA);
             auto posAttrib = Pancake::Graphics::createVertexAttributePointer(shaderProgram,
                                                                              "position",
                                                                              3,
@@ -99,12 +98,11 @@ namespace Pancake {
                     0, 2, 3 // top left, bottom right, bottom left
             };
 
-            elementBuffer = createBuffer();
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBuffer);
+            quadEB = createBuffer();
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, quadEB);
             glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(elements), elements, GL_STATIC_DRAW);
 
-            shader.set("view", glm::value_ptr(view));
-            shader.end();
+            quadShader.end();
 
             glBindVertexArray(0);
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
@@ -151,15 +149,16 @@ namespace Pancake {
 
             auto texture = new Texture(glID);
             texture->setFilename(file);
+            texture->setDimensions({x, y});
             return texture;
         }
 
         void Painter::drawQuad(const Pancake::Math::Matrix& mat) {
-            glBindVertexArray(vertexArray);
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBuffer);
+            glBindVertexArray(quadVA);
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, quadEB);
 
-            shader.begin();
-            shader.set("mat", mat);
+            quadShader.begin();
+            quadShader.set("mat", mat);
 
             texture.begin();
             glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
@@ -167,22 +166,7 @@ namespace Pancake {
 
             glBindVertexArray(0);
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-            shader.end();
-        }
-
-        void Painter::drawTexture(const Math::Matrix& mat, Texture* texture) {
-            glBindVertexArray(vertexArray);
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBuffer);
-
-            shader.begin();
-            shader.set("mat", mat);
-            texture->begin();
-            glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-            texture->end();
-
-            glBindVertexArray(0);
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-            shader.end();
+            quadShader.end();
         }
 
         void Painter::shutdown() {
@@ -198,11 +182,16 @@ namespace Pancake {
          * projection and camera stuff inside the painter.
          */
         void Painter::drawTexture(const glm::mat4& mat, Pancake::Graphics::Texture* texture) {
-            glBindVertexArray(vertexArray);
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBuffer);
+            glBindVertexArray(quadVA);
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, quadEB);
 
-            shader.begin();
-            shader.set("mat", glm::value_ptr(mat));
+            glm::mat4 projection = glm::ortho(0.0f, screen.w, screen.h, 0.0f, -5.0f, 5.0f);
+            glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(-camera.x, -camera.y, 0));
+
+            auto mvp = projection * view * mat;
+
+            quadShader.begin();
+            quadShader.set("mat", glm::value_ptr(mvp));
 
             texture->begin();
             glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
@@ -210,7 +199,11 @@ namespace Pancake {
 
             glBindVertexArray(0);
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-            shader.end();
+            quadShader.end();
+        }
+
+        void Painter::drawTexture(const glm::mat4& mat) {
+            drawTexture(mat, &texture);
         }
 
     }

@@ -39,6 +39,8 @@ namespace Pancake {
 
             Vector2(float x, float y);
 
+            Vector2(int x, int y);
+
             // Operators
             Vector2 operator+(const Vector2& o) const;
 
