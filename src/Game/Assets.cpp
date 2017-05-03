@@ -14,6 +14,7 @@ Pancake::Graphics::Texture* Pancake::Game::Assets::loadTexture(const std::string
     Pancake::Graphics::Texture* texture = nullptr;
     if (textures.find(file) == textures.end()) {
         texture = painter->loadTexture(file);
+        textures[file] = texture;
     } else {
         texture = textures[file];
     }
@@ -27,5 +28,9 @@ Pancake::Game::Assets::~Assets() {
         Log::getInstance("ASSETS")->info("Destroy texture " + (pair.second->getFilename()));
         delete pair.second;
     }
+}
+
+int Pancake::Game::Assets::count() {
+    return textures.size();
 }
 

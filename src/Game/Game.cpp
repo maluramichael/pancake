@@ -144,7 +144,7 @@ void Pancake::Game::Game::destroy() {
 Pancake::Game::Game::Game(std::string title, int width, int height) {
     setResolution(width, height);
     setTitle(title);
-    camera.setPosition({0,0});
+    camera.setPosition({0, 0});
     camera.setSize({width, height});
 }
 
@@ -177,6 +177,9 @@ void Pancake::Game::Game::run() {
         update(delta);
         if (debug) {
             ImGui_ImplSdlGL3_NewFrame(window);
+
+            debugUI(delta);
+
             updateUI(delta);
         }
         timer.start(); // restart time for next frame
@@ -226,4 +229,20 @@ void Pancake::Game::Game::toggleDebug() {
 
 void Pancake::Game::Game::setDebug(bool debug) {
     this->debug = debug;
+}
+
+void Pancake::Game::Game::debugUI(float delta) {
+    ImGui::Begin("GAME");
+
+    ImGui::LabelText("FPS", "%.2f", 1.0f / delta);
+    ImGui::LabelText("Window", "w:%.f h:%.f", screen.getWidth(), screen.getHeight());
+    ImGui::Spacing();
+    ImGui::LabelText("Camera", "%.2f %.2f %.f %.f",
+                     camera.getX(), camera.getY(),
+                     camera.getWidth(), camera.getHeight());
+    ImGui::Spacing();
+    ImGui::LabelText("Assets", "%i", assets->count());
+
+    ImGui::End();
+    ImGui::ShowTestWindow();
 }

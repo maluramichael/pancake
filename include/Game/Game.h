@@ -68,6 +68,8 @@ namespace Pancake {
 
             void destroy();
 
+            void debugUI(float delta);
+
             virtual void beforeSDLInitialized() {}
 
             virtual void afterSDLInitialized() {}

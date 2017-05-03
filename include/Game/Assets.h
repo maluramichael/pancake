@@ -23,6 +23,8 @@ namespace Pancake {
             ~Assets();
 
             Graphics::Texture* loadTexture(const std::string& file);
+
+            int count();
         };
     }
 }
