@@ -32,11 +32,29 @@ namespace Pancake {
 
             // Quad
             Shader quadShader;
-            GLuint quadVA, quadEB;
+            GLuint quadElementBuffer, quadVertexArray;
             Texture texture;
+            std::vector<VertexPositionTexture> quadVertices = {
+                    {0, 1, 0, 0, 1}, // top let
+                    {1, 1, 0, 1, 1}, // top right
+                    {1, 0, 0, 1, 0}, // bottom right
+                    {0, 0, 0, 0, 0}  // bottom let
+            };
+
+            // Line
+            Shader lineShader;
+            GLuint lineVertexArray, lineVertexBuffer;
+            std::vector<VertexPositionColor> lineVertices = {
+                    {0, 0, 0, 0, 0}, // top let
+                    {1, 0, 1, 1, 1}, // top right
+            };
 
             Pancake::Game::Camera& camera;
             Pancake::Math::Rect& screen;
+
+            void initalizeQuad();
+
+            void initalizeLine();
 
         public:
             Painter(Pancake::Game::Camera& camera, Math::Rect& screen);
@@ -54,6 +72,9 @@ namespace Pancake {
             void drawTexture(const glm::mat4& mat, Pancake::Graphics::Texture* texture);
 
             void drawTexture(const glm::mat4& mat);
+
+            void drawLine(Pancake::Math::Vector2 from, Pancake::Math::Vector2 to);
+
 
         };
     }
