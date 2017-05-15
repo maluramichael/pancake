@@ -44,10 +44,7 @@ namespace Pancake {
             // Line
             Shader lineShader;
             GLuint lineVertexArray, lineVertexBuffer;
-            std::vector<VertexPositionColor> lineVertices = {
-                    {0, 0, 0, 0, 0}, // top let
-                    {1, 0, 1, 1, 1}, // top right
-            };
+            float lineVertices[4] = {0, 0, 0.5f, 0.5f};
 
             Pancake::Game::Camera& camera;
             Pancake::Math::Rect& screen;

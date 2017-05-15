@@ -27,30 +27,26 @@ namespace Pancake {
 
             glGenBuffers(1, &lineVertexBuffer);
             glBindBuffer(GL_ARRAY_BUFFER, lineVertexBuffer);
-            glBufferData(GL_ARRAY_BUFFER, sizeof(VertexPositionColor) * lineVertices.size(), &lineVertices[0], GL_DYNAMIC_DRAW);
+            glBufferData(GL_ARRAY_BUFFER, sizeof(lineVertices), lineVertices, GL_DYNAMIC_DRAW);
 
             // Line shader
-            const char* vertexShader = "#version 150\n"
+            std::string vertexShader = "#version 150\n"
                     "\n"
                     "uniform mat4 mat;\n"
                     "in vec2 position;\n"
-                    "in vec3 color;\n"
-                    "out vec3 c;\n"
                     "\n"
                     "void main()\n"
                     "{\n"
-                    "    c = color;\n"
                     "    gl_Position = mat * vec4(position, 0.0, 1.0);\n"
                     "}";
 
             std::string fragmentShader = "#version 150\n"
                     "\n"
-                    "in vec3 c;\n"
                     "out vec4 outColor;\n"
                     "\n"
                     "void main()\n"
                     "{\n"
-                    "    outColor = vec4(c,255);\n"
+                    "    outColor = vec4(1.0, 1.0, 1.0, 1.0);\n"
                     "}";
 
             lineShader.setFragmentShaderSource(fragmentShader);
@@ -67,32 +63,10 @@ namespace Pancake {
                                                                                      "position",
                                                                                      2,
                                                                                      GL_FLOAT,
-                                                                                     5 * sizeof(float),
+                                                                                     0,
                                                                                      0);
-
-            auto colorAttribute = Pancake::Graphics::createVertexAttributePointer(program,
-                                                                                    "color",
-                                                                                    3,
-                                                                                    GL_FLOAT,
-                                                                                    5 * sizeof(float),
-                                                                                    2 * sizeof(float));
             glEnableVertexAttribArray(positionAttribute);
-            glEnableVertexAttribArray(colorAttribute);
-
-//            GLuint elements[] = { // clock wise 2 triangles
-//                    0, 1, 2, // top left, top right, bottom right
-//                    0, 2, 3 // top left, bottom right, bottom left
-//            };
-
-//            lineElementBuffer = createBuffer();
-//            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, lineElementBuffer);
-//            glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(elements), elements, GL_STATIC_DRAW);
-
             lineShader.end();
-
-            glBindVertexArray(0);
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-            glUseProgram(0);
         }
 
         void Painter::initalizeQuad() {
@@ -105,7 +79,7 @@ namespace Pancake {
 
 
             // Quad shader
-            const char* vertexShader = "#version 150\n"
+            std::string vertexShader = "#version 150\n"
                     "\n"
                     "uniform mat4 mat;\n"
                     "in vec3 position;\n"
@@ -286,31 +260,27 @@ namespace Pancake {
         }
 
         void Painter::drawLine(Math::Vector2 from, Math::Vector2 to) {
-            glBindVertexArray(lineVertexArray);
-
-            // Update buffer data
-            lineVertices[0].x = from.x;
-            lineVertices[0].y = from.y;
-            lineVertices[1].x = to.x;
-            lineVertices[1].y = to.y;
-            glBindBuffer(GL_ARRAY_BUFFER, lineVertexBuffer);
-            glBufferData(GL_ARRAY_BUFFER, sizeof(VertexPositionColor) * lineVertices.size(), &lineVertices[0], GL_DYNAMIC_DRAW);
-
-//            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, lineElementBuffer);
 
             glm::mat4 projection = glm::ortho(0.0f, screen.w, screen.h, 0.0f, -5.0f, 5.0f);
             glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(-camera.x, -camera.y, 0));
 
             auto mvp = projection * view;
 
+            lineVertices[0] = from.x;
+            lineVertices[1] = from.y;
+            lineVertices[2] = to.x;
+            lineVertices[3] = to.y;
+
+            glBindBuffer(GL_ARRAY_BUFFER, lineVertexBuffer);
+            glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(lineVertices), lineVertices);
+            glBindVertexArray(lineVertexArray);
+
             lineShader.begin();
             lineShader.set("mat", glm::value_ptr(mvp));
 
-            glDrawArrays(GL_LINE, 0, 2);
-
-            glBindVertexArray(0);
-//            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+            glDrawArrays(GL_LINES, 0, 2);
             lineShader.end();
+            glBindVertexArray(0);
         }
 
     }
