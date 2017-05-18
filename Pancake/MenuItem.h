@@ -6,11 +6,10 @@
 #define PANCAKE_MENUITEM_H
 
 namespace Pancake {
-    namespace Menu {
-        class MenuItem {
-
-        };
-    }
+  namespace Menu {
+    class MenuItem {
+    };
+  }
 }
 
 #endif //PANCAKE_MENUITEM_H

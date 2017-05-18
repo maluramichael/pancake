@@ -12,12 +12,12 @@ class Widget;
 #include "Widget.h"
 
 namespace Pancake {
-    namespace UI {
-
-        class Interface {
-            std::vector<Pancake::UI::Widget> widgets;
-        };
-    }
+  namespace UI {
+    
+    class Interface {
+      std::vector<Pancake::UI::Widget> widgets;
+    };
+  }
 }
 
 #endif //PANCAKE_INTERFACE_H

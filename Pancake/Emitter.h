@@ -6,11 +6,10 @@
 #define PANCAKE_EMITTER_H
 
 namespace Pancake {
-    namespace Particles {
-        class Emitter {
-
-        };
-    }
+  namespace Particles {
+    class Emitter {
+    };
+  }
 }
 
 #endif //PANCAKE_EMITTER_H

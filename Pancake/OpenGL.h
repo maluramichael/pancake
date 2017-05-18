@@ -8,27 +8,46 @@
 #include <GL/glew.h>
 
 namespace Pancake {
-    namespace Graphics {
-
-        struct VertexPosition {
-            float x, y;
-        };
-
-        struct VertexPositionTexture {
-            float x, y, z, u, v;
-        };
-
-        struct VertexPositionColor {
-            float x, y, r, g, b;
-        };
-
-        GLuint createVertexArray();
-
-        GLuint createBuffer();
-
-        GLuint createVertexAttributePointer(GLuint shader, const char* name, short elements, GLenum type, short stride,
-                                            short offsetInBytes, GLboolean normalize = GL_FALSE);
-    }
+  namespace Graphics {
+    
+    /**
+     *
+     */
+    struct VertexPosition {
+      float x, y;
+    };
+    /**
+     *
+     */
+    struct VertexPositionTexture {
+      float x, y, z, u, v;
+    };
+    /**
+     *
+     */
+    struct VertexPositionColor {
+      float x, y, r, g, b;
+    };
+    
+    /**
+     *
+     * @return
+     */
+    GLuint createVertexArray();
+    
+    /**
+     *
+     * @return
+     */
+    GLuint createBuffer();
+    
+    /**
+     *
+     * @return
+     */
+    GLuint createVertexAttributePointer(GLuint shader, const char* name, short elements, GLenum type, short stride,
+                                        short offsetInBytes, GLboolean normalize = GL_FALSE);
+  }
 }
 
 #endif //PANCAKE_OPENGL_H

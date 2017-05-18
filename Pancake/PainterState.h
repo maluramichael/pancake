@@ -5,24 +5,24 @@
 #include "Color.h"
 
 namespace Pancake {
-    namespace Graphics {
-
+  namespace Graphics {
+    
     class PainterState {
     private:
-        Color color;
-
+      Color color;
+    
     public:
-        PainterState();
-
-        Color getColor();
-
-        void setColor(short r, short g, short b, short a);
-
-        void setColor(int color);
-
-        void setColor(Color color);
+      PainterState();
+      
+      Color getColor();
+      
+      void setColor(short r, short g, short b, short a);
+      
+      void setColor(int color);
+      
+      void setColor(Color color);
     };
-}
+  }
 }
 
 #endif

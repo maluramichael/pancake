@@ -6,11 +6,11 @@
 #define GAME_SETTINGS_H
 
 namespace Pancake {
-
-    enum Codes {
-        OK,
-        ERROR
-    };
+  
+  enum Codes {
+    OK,
+    ERROR
+  };
 }
 
 #endif //GAME_SETTINGS_H

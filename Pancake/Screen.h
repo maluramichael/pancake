@@ -6,11 +6,10 @@
 #define PANCAKE_SCREEN_H
 
 namespace Pancake {
-    namespace Game {
-        class Screen {
-
-        };
-    }
+  namespace Game {
+    class Screen {
+    };
+  }
 }
 
 #endif //PANCAKE_SCREEN_H

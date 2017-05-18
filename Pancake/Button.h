@@ -9,11 +9,10 @@
 #include "Widget.h"
 
 namespace Pancake {
-    namespace UI {
-        class Button : public Widget {
-
-        };
-    }
+  namespace UI {
+    class Button : public Widget {
+    };
+  }
 }
 
 #endif //PANCAKE_BUTTON_H

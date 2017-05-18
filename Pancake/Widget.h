@@ -8,12 +8,10 @@
 #include "Interface.h"
 
 namespace Pancake {
-    namespace UI {
-        class Widget {
-
-        };
-    }
+  namespace UI {
+    class Widget {
+    };
+  }
 }
-
 
 #endif //PANCAKE_WIDGET_H
