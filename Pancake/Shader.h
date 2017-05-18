@@ -76,6 +76,12 @@ namespace Pancake {
                                                                      fragmentShaderSource(fragmentShader) {
       }
       
+      void release() {
+        if (vertexShader != 0) { glDeleteShader(vertexShader); }
+        if (fragmentShader != 0) { glDeleteShader(fragmentShader); }
+        if (shaderProgram != 0) { glDeleteProgram(shaderProgram); }
+      }
+      
       void setVertexShaderSource(std::string vertexShaderSource) {
         this->vertexShaderSource = vertexShaderSource;
       }
