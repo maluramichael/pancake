@@ -6,15 +6,13 @@ SET(CMAKE_CXX_STANDARD 11)
 SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
 
 FIND_PACKAGE(GLM REQUIRED)
-FIND_PACKAGE(Devil REQUIRED)
 FIND_PACKAGE(OpenGL REQUIRED)
 FIND_PACKAGE(GLEW REQUIRED)
 FIND_PACKAGE(SDL2 REQUIRED)
 FIND_PACKAGE(SDL2_image REQUIRED)
 FIND_PACKAGE(SDL2_mixer REQUIRED)
 
-INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/include)
-
+INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR})
 INCLUDE_DIRECTORIES(${GLM_INCLUDE_DIR})
 INCLUDE_DIRECTORIES(${OPENGL_INCLUDE_DIR})
 INCLUDE_DIRECTORIES(${GLEW_INCLUDE_DIR})
@@ -23,45 +21,31 @@ INCLUDE_DIRECTORIES(${SDL2_IMAGE_INCLUDE_DIR})
 INCLUDE_DIRECTORIES(${SDLMIXER_INCLUDE_DIR})
 
 INCLUDE_DIRECTORIES(libs/json/src)
-INCLUDE_DIRECTORIES(libs/stb)
-INCLUDE_DIRECTORIES(libs/imgui)
 
-MESSAGE("SDL: ${SDL_INCLUDE_DIR}")
+MESSAGE("SDL: ${SDL2_INCLUDE_DIR}")
 MESSAGE("GL: ${OPENGL_INCLUDE_DIR}")
 MESSAGE("GLEW: ${GLEW_INCLUDE_DIR}")
 
 FILE(GLOB HEADERS
-        include/*.h
-        include/Graphics/*.h
-        include/Images/*.h
-        include/UI/*.h
-        include/Game/*.h
-        include/Menu/*.h
-        include/Particles/*.h
-        include/Math/*.h
-
-        libs/imgui/*.h
-        libs/stb/*.h
+        Pancake/*.h
         )
 
 FILE(GLOB SOURCES
-        src/*.cpp
-        src/Graphics/*.cpp
-        src/Images/*.cpp
-        src/UI/*.cpp
-        src/Game/*.cpp
-        src/Menu/*.cpp
-        src/Particles/*.cpp
-        src/Math/*.cpp
-
-        libs/imgui/*.cpp
+        Pancake/*.cpp
         )
 
-FILE(GLOB IMGUI_HEADER libs/imgui/*.h)
+ADD_LIBRARY(pancake STATIC ${SOURCES})
 
-ADD_LIBRARY(pancake STATIC ${SOURCES} ${HEADERS})
+ADD_EXECUTABLE(example example.cpp ${SOURCES})
 
-INSTALL(TARGETS pancake DESTINATION "lib")
+TARGET_LINK_LIBRARIES(example
+        ${GLEW_LIBRARY_RELEASE}
+        ${OPENGL_LIBRARY}
+        ${SDL2_LIBRARY}
+        ${SDL2_IMAGE_LIBRARY}
+        ${SDL2GFX_LIBRARY}
+        ${SDLMIXER_LIBRARIES})
 
-INSTALL(DIRECTORY include/ DESTINATION "include/Pancake")
-INSTALL(FILES ${IMGUI_HEADER} DESTINATION "include/Pancake/UI")
+#INSTALL(TARGETS pancake DESTINATION "lib")
+#INSTALL(DIRECTORY include/ DESTINATION "include/Pancake")
+#INSTALL(FILES ${IMGUI_HEADER} DESTINATION "include/Pancake/UI")

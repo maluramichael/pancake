@@ -32,7 +32,5 @@
 .idea
 build
 cmake-build-debug
-./pancake
-pancake
 .DS_Store
 docs/
