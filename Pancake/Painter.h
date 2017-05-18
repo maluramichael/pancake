@@ -28,33 +28,79 @@ namespace Pancake {
     class Painter {
     private:
       PainterState currentState;
-      
-      // Quad
-      Shader quadShader;
-      
-      GLuint quadElementBuffer, quadVertexArray;
-      
-      Texture texture;
-      
-      std::vector<VertexPositionTexture> quadVertices = {
+  
+      /**
+       *
+       */
+      Shader textureShader;
+  
+      /**
+       *
+       */
+      GLuint textureElementBuffer, textureVertexArray;
+  
+      /**
+       *
+       */
+      Texture debugTexture;
+  
+      /**
+       *
+       */
+      std::vector<VertexPositionTexture> textureVertices = {
         {0, 1, 0, 0, 1}, // top let
         {1, 1, 0, 1, 1}, // top right
         {1, 0, 0, 1, 0}, // bottom right
         {0, 0, 0, 0, 0}  // bottom let
       };
+  
+      /**
+       *
+       */
+      Shader coloredQuadShader;
+  
+      /**
+       *
+       */
+      GLuint coloredQuadElementBuffer, coloredQuadVertexArray;
+  
+      /**
+       *
+       */
+      Texture coloredQuad;
+  
+      /**
+       *
+       */
+      std::vector<VertexPosition> coloredQuadVertices = {
+        {0, 1}, // top let
+        {1, 1}, // top right
+        {1, 0}, // bottom right
+        {0, 0}  // bottom let
+      };
       
-      // Line
+      /**
+       *
+       */
       Shader lineShader;
       
+      /**
+       *
+       */
       GLuint lineVertexArray, lineVertexBuffer;
       
+      /**
+       * 
+       */
       float lineVertices[4] = {0, 0, 0.5f, 0.5f};
       
       Pancake::Math::Rect* camera;
       
       Pancake::Math::Rect* screen;
       
-      void initalizeQuad();
+      void initializeColoredQuad();
+      
+      void initalizeTexturedQuad();
       
       void initalizeLine();
     
@@ -67,13 +113,15 @@ namespace Pancake {
       
       void initialize();
       
-      void drawQuad(const Pancake::Math::Matrix& mat);
-      
       void drawTexture(const glm::mat4& mat, Pancake::Graphics::Texture& texture);
       
       void drawTexture(const glm::mat4& mat);
       
       void drawLine(Pancake::Math::Vector2 from, Pancake::Math::Vector2 to);
+      
+      void drawRectangle(Pancake::Math::Vector2 from, Pancake::Math::Vector2 to);
+      
+      void fillRectangle(Pancake::Math::Vector2 from, Pancake::Math::Vector2 to);
     };
   }
 }
