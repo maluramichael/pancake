@@ -26,6 +26,7 @@ namespace Pancake {
                     format = GL_RGBA;
             }
 
+            glBindTexture(GL_TEXTURE_2D, 0);
             GLuint glID = 0;
             glGenTextures(1, &glID);
 
@@ -72,6 +73,8 @@ namespace Pancake {
 
         void Texture::generate() {
             if (id != 0) return;
+
+            glBindTexture(GL_TEXTURE_2D, 0);
             id = 0;
             glGenTextures(1, &id);
             std::cout << "Generate texture " << id << "\n";
@@ -93,10 +96,6 @@ namespace Pancake {
             end();
         }
 
-
-        Texture::~Texture() {
-            if (id != 0) glDeleteTextures(1, &id);
-        }
 
         void Texture::setFilename(const std::string& filename) { Texture::filename = filename; }
 

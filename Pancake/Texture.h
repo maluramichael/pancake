@@ -29,8 +29,6 @@ namespace Pancake {
 
             Texture(GLuint id);
 
-            ~Texture();
-
             void release();
 
             const Math::Vector2& getDimensions() const;
