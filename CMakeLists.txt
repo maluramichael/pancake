@@ -34,6 +34,9 @@ FILE(GLOB SOURCES
         Pancake/*.cpp
         )
 
+set(PANCAKE_HEADER ${HEADERS} CACHE INTERNAL "")
+set(PANCAKE_SOURCE ${SOURCES} CACHE INTERNAL "")
+
 ADD_LIBRARY(pancake STATIC ${SOURCES})
 
 ADD_EXECUTABLE(pancake_example example.cpp ${SOURCES})
