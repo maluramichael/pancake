@@ -36,9 +36,9 @@ FILE(GLOB SOURCES
 
 ADD_LIBRARY(pancake STATIC ${SOURCES})
 
-ADD_EXECUTABLE(example example.cpp ${SOURCES})
+ADD_EXECUTABLE(pancake_example example.cpp ${SOURCES})
 
-TARGET_LINK_LIBRARIES(example
+TARGET_LINK_LIBRARIES(pancake_example
         ${GLEW_LIBRARY_RELEASE}
         ${OPENGL_LIBRARY}
         ${SDL2_LIBRARY}
