@@ -1,7 +1,7 @@
 #ifndef PANCAKE_WIDGET
 #define PANCAKE_WIDGET
 
-#include "Interface.h"
+#include "../Graphic/Renderable.h"
 
 class Widget : public Renderable {
 protected:
@@ -14,7 +14,6 @@ protected:
   int h = 1;
 
 public:
-  virtual void render(float delta) {}
 };
 
 #endif

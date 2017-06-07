@@ -1,16 +1,9 @@
-//
+#ifndef PANCAKE_CONSTANTS
+#define PANCAKE_CONSTANTS
 
-//
+enum Codes {
+  OK,
+  ERROR
+};
 
-#ifndef GAME_SETTINGS_H
-#define GAME_SETTINGS_H
-
-namespace Pancake {
-  
-  enum Codes {
-    OK,
-    ERROR
-  };
-}
-
-#endif //GAME_SETTINGS_H
+#endif

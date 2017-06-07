@@ -20,4 +20,4 @@ public:
   unsigned long count();
 };
 
-#endif //PANCAKE_ASSETMANAGER
+#endif

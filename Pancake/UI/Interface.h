@@ -1,7 +1,3 @@
-//
-
-//
-
 #ifndef PANCAKE_INTERFACE
 #define PANCAKE_INTERFACE
 
@@ -23,7 +19,7 @@ public:
   
   WidgetHandleList widgets;
   
-  void render(Pancake::Graphics::Painter& painter) {
+  void render(Painter& painter) {
   }
   
   void update(float delta) {
@@ -41,4 +37,4 @@ public:
   }
 };
 
-#endif //PANCAKE_INTERFACE
+#endif

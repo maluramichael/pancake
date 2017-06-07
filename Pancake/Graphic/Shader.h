@@ -92,11 +92,11 @@ public:
     return true;
   }
   
-  void begin() {
+  void begin() const {
     glUseProgram(shaderProgram);
   }
   
-  void end() {
+  void end() const {
     glUseProgram(0);
   }
   
@@ -127,7 +127,7 @@ public:
     glUniform4f(uniforms[name], x, y, z, w);
   }
   
-  void set(std::string name, const Pancake::Math::Matrix& mat) {
+  void set(std::string name, const Matrix& mat) {
     glUniformMatrix4fv(uniforms[name], 1, GL_FALSE, mat.data);
   }
   

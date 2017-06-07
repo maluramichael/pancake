@@ -1,23 +1,18 @@
-//
-
 #include "Matrix.h"
 
-
-//}
-
-void Pancake::Math::Matrix::translate(Pancake::Math::Matrix& m, Pancake::Math::Vector2 v) {
+void Matrix::translate(Matrix& m, Vector2 v) {
   m.loadIdentity();
   m.data[3] = v.x;
   m.data[7] = v.y;
 }
 
-void Pancake::Math::Matrix::scale(Pancake::Math::Matrix& m, Pancake::Math::Vector2 v) {
+void Matrix::scale(Matrix& m, Vector2 v) {
   m.loadIdentity();
   m.data[0] = v.x;
   m.data[5] = v.y;
 }
 
-void Pancake::Math::Matrix::rotateX(Pancake::Math::Matrix& m, float t) {
+void Matrix::rotateX(Matrix& m, float t) {
   m.loadIdentity();
   m.data[5] = cos(t);
   m.data[6] = -(sin(t));
@@ -25,7 +20,7 @@ void Pancake::Math::Matrix::rotateX(Pancake::Math::Matrix& m, float t) {
   m.data[10] = cos(t);
 }
 
-void Pancake::Math::Matrix::rotateY(Pancake::Math::Matrix& m, float t) {
+void Matrix::rotateY(Matrix& m, float t) {
   m.loadIdentity();
   m.data[0] = cos(t);
   m.data[2] = sin(t);
@@ -33,7 +28,7 @@ void Pancake::Math::Matrix::rotateY(Pancake::Math::Matrix& m, float t) {
   m.data[10] = cos(t);
 }
 
-void Pancake::Math::Matrix::rotateZ(Pancake::Math::Matrix& m, float t) {
+void Matrix::rotateZ(Matrix& m, float t) {
   m.loadIdentity();
   m.data[0] = cos(t);
   m.data[1] = -(sin(t));
@@ -41,7 +36,7 @@ void Pancake::Math::Matrix::rotateZ(Pancake::Math::Matrix& m, float t) {
   m.data[6] = cos(t);
 }
 
-void Pancake::Math::Matrix::ortho(Pancake::Math::Matrix& m,
+void Matrix::ortho(Matrix& m,
                                   float left, float right,
                                   float bottom, float top,
                                   float near, float far) {
@@ -54,7 +49,7 @@ void Pancake::Math::Matrix::ortho(Pancake::Math::Matrix& m,
   m.data[10] = -((far + near) / (far - near));
 }
 
-float Pancake::Math::Matrix::combineRowAndColumn(float* row, float* column) {
+float Matrix::combineRowAndColumn(float* row, float* column) {
   return (row[0] * column[0]) +
          (row[1] * column[1]) +
          (row[2] * column[2]) +
@@ -63,7 +58,7 @@ float Pancake::Math::Matrix::combineRowAndColumn(float* row, float* column) {
 
 //
 
-//std::ostream& Pancake::Math::Matrix::operator<<(std::ostream& stream, const Pancake::Math::Matrix& m) {
+//std::ostream& Matrix::operator<<(std::ostream& stream, const Matrix& m) {
 //    short width = 1;
 //
 //    float min = 0, max = 0;
@@ -122,11 +117,11 @@ float Pancake::Math::Matrix::combineRowAndColumn(float* row, float* column) {
 //    std::cout << "]\n";
 //
 //    return stream;
-Pancake::Math::Matrix::Matrix(const Pancake::Math::Matrix& o) {
+Matrix::Matrix(const Matrix& o) {
   memcpy(this->data, o.data, 16 * sizeof(float));
 }
 
-void Pancake::Math::Matrix::multiply(const Pancake::Math::Matrix& o) {
+void Matrix::multiply(const Matrix& o) {
   
   Matrix m(*this);
   
@@ -157,8 +152,8 @@ void Pancake::Math::Matrix::multiply(const Pancake::Math::Matrix& o) {
   memcpy(this->data, m.data, 16 * sizeof(float));
 }
 
-Pancake::Math::Matrix Pancake::Math::Matrix::operator*(const Pancake::Math::Matrix& o) {
-  Pancake::Math::Matrix m;
+Matrix Matrix::operator*(const Matrix& o) {
+  Matrix m;
   
   // first row
   m.data[0] = combineRowAndColumn(this->firstRow[0], o.firstColumn[0]);
@@ -187,7 +182,7 @@ Pancake::Math::Matrix Pancake::Math::Matrix::operator*(const Pancake::Math::Matr
   return m;
 }
 
-void Pancake::Math::Matrix::loadIdentity() {
+void Matrix::loadIdentity() {
   float d[] = {
     1, 0, 0, 0,
     0, 1, 0, 0,
@@ -237,14 +232,14 @@ void Pancake::Math::Matrix::loadIdentity() {
   fourthColumn[3] = &data[15];
 }
 
-Pancake::Math::Matrix::~Matrix() {
+Matrix::~Matrix() {
 //    if (data != nullptr) {
 //        delete[] data;
 //        data = nullptr;
 //    }
 }
 
-Pancake::Math::Matrix::Matrix() {
+Matrix::Matrix() {
 //    data = new float[16];
   loadIdentity();
 }

@@ -1,19 +1,14 @@
-//
-
-//
-
-// pancake
 #include "BaseGame.h"
 
 int BaseGame::init() {
-  Pancake::Log::initialize();
-  Pancake::LogHandle log = Pancake::Log::getInstance("GAME");
+  Log::initialize();
+  LogHandle log = Log::getInstance("GAME");
   
   beforeSDLInitialized();
   log->info("Initialize sdl");
   if (SDL_Init(SDL_INIT_VIDEO) != 0) {
     log->error(SDL_GetError());
-    return Pancake::Codes::ERROR;
+    return Codes::ERROR;
   }
   afterSDLInitialized();
   
@@ -21,7 +16,7 @@ int BaseGame::init() {
   if ((IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG) != IMG_INIT_PNG) {
     log->error(SDL_GetError());
     SDL_Quit();
-    return Pancake::Codes::ERROR;
+    return Codes::ERROR;
   }
   
   beforeWindowCreated();
@@ -31,7 +26,7 @@ int BaseGame::init() {
   if (window == nullptr) {
     log->error(SDL_GetError());
     SDL_Quit();
-    return Pancake::Codes::ERROR;
+    return Codes::ERROR;
   }
   afterWindowCreated();
 
@@ -40,9 +35,9 @@ int BaseGame::init() {
 //    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 //    if (renderer == nullptr) {
 //        log->error(SDL_GetError());
-//        Pancake::cleanup(window);
+//        cleanup(window);
 //        SDL_Quit();
-//        return Pancake::Codes::ERROR;
+//        return Codes::ERROR;
 //    }
 //    afterRendererCreated();
   
@@ -60,7 +55,7 @@ int BaseGame::init() {
   beforeGLEWInit();
   if (GLEW_OK != glewInit()) {
     log->error("Could not initialize glew");
-    return Pancake::Codes::ERROR;
+    return Codes::ERROR;
   }
   printf("OpenGL %s, GLSL %s\n", glGetString(GL_VERSION), glGetString(GL_SHADING_LANGUAGE_VERSION));
   afterGLEWInit();
@@ -73,7 +68,7 @@ int BaseGame::init() {
   ImGui_ImplSdlGL3_Init(window);
   
   log->info("Create painter");
-  painter = Pancake::Graphics::Painter(camera, screen);
+  painter = Painter(camera, screen);
   painter.initialize();
   
   log->info("Load assets");
@@ -94,11 +89,11 @@ int BaseGame::init() {
   log->info("Game initialized");
   initialized();
   
-  return Pancake::Codes::OK;
+  return Codes::OK;
 }
 
 void BaseGame::destroy() {
-  Pancake::LogHandle log = Pancake::Log::getInstance("GAME");
+  LogHandle log = Log::getInstance("GAME");
   
   log->info("Shutdown imgui");
   ImGui_ImplSdlGL3_Shutdown();
@@ -115,7 +110,7 @@ void BaseGame::destroy() {
   painter.cleanup();
   
   log->info("Cleanup renderer and window");
-  Pancake::cleanup(renderer, window);
+  cleanup(renderer, window);
   
   renderer = nullptr;
   window = nullptr;
@@ -130,7 +125,7 @@ void BaseGame::destroy() {
   destroyed();
   
   log->info("Done destroying game");
-  Pancake::Log::release();
+  Log::release();
 }
 
 BaseGame::BaseGame(std::string title, int width, int height) {
@@ -141,12 +136,12 @@ BaseGame::BaseGame(std::string title, int width, int height) {
 }
 
 void BaseGame::run() {
-  if (init() != Pancake::Codes::OK) {
+  if (init() != Codes::OK) {
     return;
   }
   
   Timer timer;
-  Pancake::LogHandle log = Pancake::Log::getInstance("GAME");
+  LogHandle log = Log::getInstance("GAME");
   log->info("Run game");
   /**
    * GAME LOOP
@@ -202,7 +197,7 @@ void BaseGame::setTitle(std::string title) {
 }
 
 void BaseGame::setResolution(int width, int height) {
-  this->screen = Pancake::Math::Rect(0, 0, width, height);
+  this->screen = Rect(0, 0, width, height);
   SDL_SetWindowSize(this->window, width, height);
 }
 

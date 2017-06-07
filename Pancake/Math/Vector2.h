@@ -87,9 +87,9 @@ public:
   
   float deg();
   
-  Vector2 interpolate(const Vector2& to, float t) const;
+  Vector2 interpolate(const Vector2& to, float t);
   
-  Vector2 interpolateCosine(const Vector2& to, float t) const;
+  Vector2 interpolateCosine(const Vector2& to, float t);
 };
 
 #endif

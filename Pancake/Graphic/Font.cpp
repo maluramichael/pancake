@@ -4,7 +4,7 @@
 #define STB_TRUETYPE_IMPLEMENTATION
 #include "../UI/stb_truetype.h"
 
-bool Pancake::Font::load() {
+bool Font::load() {
   
   std::string filename = "res/ProggyClean.ttf";
   unsigned char* buffer;

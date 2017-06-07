@@ -1,16 +1,12 @@
-//
-
-//
-
 #include "Text.h"
 
-Pancake::Graphics::Text::Text() {
+Text::Text() {
 }
 
-void Pancake::Graphics::Text::setFont(const Pancake::Font* font) {
+void Text::setFont(const Font* font) {
   this->font = font;
 }
 
-void Pancake::Graphics::Text::setText(const char* text) {
+void Text::setText(const char* text) {
   this->text = text;
 }
