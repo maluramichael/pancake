@@ -25,21 +25,21 @@ MESSAGE("SDL: ${SDL2_INCLUDE_DIR}")
 MESSAGE("GL: ${OPENGL_INCLUDE_DIR}")
 MESSAGE("GLEW: ${GLEW_INCLUDE_DIR}")
 
-#FILE(GLOB HEADERS
-#        Pancake/*.h
-#        )
-#
-#FILE(GLOB SOURCES
-#        Pancake/*.cpp
-#        )
-#
-#MESSAGE("[PANCAKE] Sources ${SOURCES}")
-#
-#set(PANCAKE_HEADER ${HEADERS} CACHE INTERNAL "")
-#set(PANCAKE_SOURCE ${SOURCES} CACHE INTERNAL "")
-#
-#ADD_LIBRARY(pancake STATIC ${SOURCES})
-#
+FILE(GLOB_RECURSE HEADERS
+        Pancake/*.h
+        )
+
+FILE(GLOB_RECURSE SOURCES
+        Pancake/*.cpp
+        )
+
+MESSAGE("[PANCAKE] Sources ${SOURCES}")
+
+set(PANCAKE_HEADER ${HEADERS} CACHE INTERNAL "")
+set(PANCAKE_SOURCE ${SOURCES} CACHE INTERNAL "")
+
+ADD_LIBRARY(pancake STATIC ${SOURCES})
+
 ADD_EXECUTABLE(pancake_example example.cpp ${SOURCES})
 
 TARGET_LINK_LIBRARIES(pancake_example
