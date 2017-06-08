@@ -1,8 +1,8 @@
 #ifndef PANCAKE_TEXT
 #define PANCAKE_TEXT
 
-#include "../Graphic/Font.h"
-#include "../Graphic/Renderable.h"
+#include "Font.h"
+#include "Renderable.h"
 
 class Text : public Renderable {
   const char* text;

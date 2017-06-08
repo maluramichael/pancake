@@ -3,12 +3,14 @@
 
 #include <glm/vec3.hpp>
 
+class Painter;
+
 class Renderable {
 protected:
   glm::vec3 position, size = glm::vec3(1), rotation;
 
 public:
-//      virtual void render(const Painter& painter) = 0;
+  virtual void render(Painter& painter) = 0;
 };
 
 #endif

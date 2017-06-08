@@ -3,11 +3,7 @@
 
 #include "Polygon.h"
 
-namespace Pancake {
-  namespace Graphics {
-    class Line : public Polygon {
-    };
-  }
-}
+class Line : public Polygon {
+};
 
 #endif

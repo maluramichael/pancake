@@ -1,5 +1,1 @@
-//
-
-//
-
 #include "Triangle.h"

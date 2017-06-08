@@ -4,13 +4,9 @@
 #include "Texture.h"
 #include "Renderable.h"
 
-namespace Pancake {
-  namespace Graphics {
-    class Image : public Renderable {
-    private:
-      Texture texture;
-    };
-  }
-}
+class Image : public Renderable {
+private:
+  Texture texture;
+};
 
 #endif
