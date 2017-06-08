@@ -5,10 +5,9 @@
 #include <functional>
 
 #include "Widget.h"
+#include "../Graphic/Painter.h"
 
 typedef std::function<void(void)> MouseClickCallback;
-
-class Widget;
 
 class Interface {
 
@@ -20,6 +19,9 @@ public:
   WidgetHandleList widgets;
   
   void render(Painter& painter) {
+    for (auto& widget: widgets) {
+      widget->render(painter);
+    }
   }
   
   void update(float delta) {
@@ -27,6 +29,15 @@ public:
   
   void addWidget(WidgetHandle handle) {
     widgets.push_back(handle);
+  }
+  
+  void initialize() {
+  }
+  
+  void processEvent(SDL_Event* event) {
+    for (auto& widget:widgets) {
+      widget->processEvent(event);
+    }
   }
   
   void destroy() {
