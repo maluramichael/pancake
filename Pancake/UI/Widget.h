@@ -9,7 +9,7 @@ protected:
   bool hovered = false;
 
 public:
-  void processEvent(SDL_Event* event) {
+  virtual void processEvent(SDL_Event* event) {
     if (event->type == SDL_MOUSEMOTION) {
       int x = event->motion.x;
       int y = event->motion.y;
