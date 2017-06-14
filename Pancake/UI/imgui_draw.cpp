@@ -97,7 +97,7 @@
 #else
 #define STBTT_DEF extern
 #endif
-#include "stb_truetype.h"
+#include "../Graphic/stb_truetype.h"
 
 #ifdef __GNUC__
 #pragma GCC diagnostic pop

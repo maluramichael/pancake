@@ -3,7 +3,7 @@
 
 #include <ostream>
 #include "Texture.h"
-#include "../UI/stb_truetype.h"
+#include "stb_truetype.h"
 
 template<typename T>
 std::istream& binary_read(std::istream& stream, T& value) {
@@ -19,12 +19,13 @@ class Font {
 private:
   Texture texture;
   
-  unsigned char temp_bitmap[512 * 512];
   
   stbtt_bakedchar cdata[96]; // ASCII 32..126 is 95 glyphs
 
 public:
   bool load();
+  
+  Texture& getTexture();
   
   void release() {
     texture.release();

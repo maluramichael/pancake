@@ -8,10 +8,11 @@ public:
   const char* name;
   
   ProfilerSample(const char* name) : name(name) {
+    std::cout << "[PROFILER_START] " << name << "\n";
   }
   
   ~ProfilerSample() {
-    std::cout << "[PROFILER] " << name << " took 9ms\n";
+    std::cout << "[  PROFILER_END] " << name << "\n";
   }
 };
 

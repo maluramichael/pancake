@@ -4,7 +4,7 @@
 #include "Font.h"
 #include "Renderable.h"
 
-class Text : public Renderable {
+class Text {
   const char* text;
   
   const Font* font;

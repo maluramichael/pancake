@@ -1,7 +1,7 @@
 #include "Texture.h"
 
 #define STB_IMAGE_IMPLEMENTATION
-#include "../UI/stb_image.h"
+#include "stb_image.h"
 
 Texture Texture::loadTexture(const std::string& file) {
   
@@ -102,7 +102,8 @@ void Texture::setDimensions(Vector2 dimensions) {
 }
 
 void Texture::setData(GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type, const void* pixels) {
-  glTexImage2D(target, level, internalformat, width, height, border, format, type, pixels);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, width, height, 0, GL_RED, GL_UNSIGNED_BYTE, pixels);
+  //glTexImage2D(target, level, internalformat, width, height, border, format, type, pixels);
 }
 
 void Texture::create() {
