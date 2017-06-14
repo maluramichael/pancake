@@ -10,7 +10,7 @@
 #include "../Math/Vector2.h"
 
 class Shader {
-private:
+protected:
   
   typedef std::vector<GLuint> ShaderList;
   

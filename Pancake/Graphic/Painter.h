@@ -21,6 +21,7 @@
 #include "Texture.h"
 #include "OpenGL.h"
 #include "Shader.h"
+#include "TextureShader.h"
 #include "Mesh.h"
 #include "Text.h"
 
@@ -35,7 +36,7 @@ private:
   /**
    *
    */
-  Shader textureShader;
+  TextureShader textureShader;
   
   /**
    *

@@ -60,54 +60,57 @@ void Painter::initalizeTexturedQuad() {
                GL_STATIC_DRAW);
   
   
-  // Quad shader
-  std::string vertexShader = "#version 150\n"
-    "\n"
-    "uniform mat4 mat;\n"
-    "in vec3 position;\n"
-    "in vec2 textureCoordinate;\n"
-    "out vec2 _textureCoordinate;\n"
-    "\n"
-    "void main()\n"
-    "{\n"
-    "    _textureCoordinate = textureCoordinate;\n"
-    "    gl_Position = mat * vec4(position, 1.0);\n"
-    "}";
-  std::string fragmentShader = "#version 150\n"
-    "\n"
-    "in vec2 _textureCoordinate;\n"
-    "out vec4 outColor;\n"
-    "uniform sampler2D tex;\n"
-    "\n"
-    "void main()\n"
-    "{\n"
-    "    outColor = texture(tex, _textureCoordinate);\n"
-    "}";
+  //// Quad shader
+  //std::string vertexShader = "#version 150\n"
+  //  "\n"
+  //  "uniform mat4 mat;\n"
+  //  "in vec3 position;\n"
+  //  "in vec2 textureCoordinate;\n"
+  //  "out vec2 _textureCoordinate;\n"
+  //  "\n"
+  //  "void main()\n"
+  //  "{\n"
+  //  "    _textureCoordinate = textureCoordinate;\n"
+  //  "    gl_Position = mat * vec4(position, 1.0);\n"
+  //  "}";
+  //std::string fragmentShader = "#version 150\n"
+  //  "\n"
+  //  "in vec2 _textureCoordinate;\n"
+  //  "out vec4 outColor;\n"
+  //  "uniform sampler2D tex;\n"
+  //  "\n"
+  //  "void main()\n"
+  //  "{\n"
+  //  "    outColor = texture(tex, _textureCoordinate);\n"
+  //  "}";
+  //
+  //textureShader.setFragmentShaderSource(fragmentShader);
+  //textureShader.setVertexShaderSource(vertexShader);
+  //textureShader.load();
+  //textureShader.loadUniforms(std::vector<std::string>{"mat"});
+  //textureShader.begin();
+  //
+  //auto program = textureShader.getProgram();
+  //textureVertexArray = createVertexArray();
+  //glBindVertexArray(textureVertexArray);
+  //
+  //auto positionAttribute = createVertexAttributePointer(program,
+  //                                                      "position",
+  //                                                      3,
+  //                                                      GL_FLOAT,
+  //                                                      5 * sizeof(float),
+  //                                                      0);
+  //auto textureAttribute = createVertexAttributePointer(program,
+  //                                                     "textureCoordinate",
+  //                                                     2,
+  //                                                     GL_FLOAT,
+  //                                                     5 * sizeof(float),
+  //                                                     3 * sizeof(float));
+  //glEnableVertexAttribArray(positionAttribute);
+  //glEnableVertexAttribArray(textureAttribute);
   
-  textureShader.setFragmentShaderSource(fragmentShader);
-  textureShader.setVertexShaderSource(vertexShader);
-  textureShader.load();
-  textureShader.loadUniforms(std::vector<std::string>{"mat"});
+  textureShader.initialize();
   textureShader.begin();
-  
-  auto program = textureShader.getProgram();
-  textureVertexArray = createVertexArray();
-  glBindVertexArray(textureVertexArray);
-  
-  auto positionAttribute = createVertexAttributePointer(program,
-                                                        "position",
-                                                        3,
-                                                        GL_FLOAT,
-                                                        5 * sizeof(float),
-                                                        0);
-  auto textureAttribute = createVertexAttributePointer(program,
-                                                       "textureCoordinate",
-                                                       2,
-                                                       GL_FLOAT,
-                                                       5 * sizeof(float),
-                                                       3 * sizeof(float));
-  glEnableVertexAttribArray(positionAttribute);
-  glEnableVertexAttribArray(textureAttribute);
   
   GLuint elements[] = { // clock wise 2 triangles
     0, 1, 2, // top left, top right, bottom right
