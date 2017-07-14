@@ -1,18 +1,23 @@
 #ifndef PANCAKE_PROFILERSAMPLE
 #define PANCAKE_PROFILERSAMPLE
 
+#include <time.h>
 #include <iostream>
 
 class ProfilerSample {
 public:
   const char* name;
   
-  ProfilerSample(const char* name) : name(name) {
-    std::cout << "[PROFILER_START] " << name << "\n";
+  const std::clock_t start;
+  
+  ProfilerSample(const char* name) : name(name), start(clock()) {
+    //std::cout << "[PFLR] " << name << "\n";
   }
   
   ~ProfilerSample() {
-    std::cout << "[  PROFILER_END] " << name << "\n";
+    auto time = (double(clock() - start) / CLOCKS_PER_SEC);
+    
+    std::cout << "[PFLR] " <<  name << " | " << time << "\n";
   }
 };
 
