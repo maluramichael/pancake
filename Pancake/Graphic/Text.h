@@ -15,6 +15,10 @@ public:
   void setFont(const Font* font);
   
   void setText(const char* text);
+  
+  const char* getText() const;
+  
+  const Font* getFont() const;
 };
 
 #endif

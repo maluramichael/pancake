@@ -117,15 +117,44 @@ public:
   
   void initialize();
   
-  void drawTexture(const glm::mat4& mat, Texture& texture);
+  /**
+   *
+   * @param mat
+   * @param texture
+   */
+  void drawTexture(const glm::mat4& mat, const Texture& texture);
   
+  void drawSubTexture(const glm::mat4& mat, const glm::vec2& from, const glm::vec2& to, const Texture& texture);
+  
+  /**
+   *
+   * @param mat
+   */
   void drawTexture(const glm::mat4& mat);
   
-  void drawLine(Vector2 from, Vector2 to);
+  /**
+   *
+   * @param from
+   * @param to
+   */
+  void drawLine(const Vector2& from, const Vector2& to);
   
-  void drawRectangle(Vector2 from, Vector2 size);
+  /**
+   *
+   * @param from
+   * @param size
+   */
+  void drawRectangle(const Vector2& from, const Vector2& size);
   
-  void fillRectangle(Vector2 from, Vector2 size, Color color);
+  /**
+   *
+   * @param from
+   * @param size
+   * @param color
+   */
+  void fillRectangle(const Vector2& from, const Vector2& size, const Color& color);
+  
+  void drawText(Text& text, const Vector2& position);
   
   unsigned int getDrawCalls();
 };

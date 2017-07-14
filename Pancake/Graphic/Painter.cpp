@@ -7,7 +7,6 @@ Painter::Painter(Rect& camera, Rect& screen) : camera(&camera), screen(&screen) 
 }
 
 void Painter::initalizeLine() {
-  
   glGenBuffers(1, &lineVertexBuffer);
   glBindBuffer(GL_ARRAY_BUFFER, lineVertexBuffer);
   glBufferData(GL_ARRAY_BUFFER, sizeof(lineVertices), lineVertices, GL_DYNAMIC_DRAW);
@@ -129,7 +128,6 @@ void Painter::initalizeTexturedQuad() {
 }
 
 void Painter::initializeColoredQuad() {
-  
   GLuint vertexBuffer;
   glGenBuffers(1, &vertexBuffer);
   glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
@@ -199,7 +197,28 @@ void Painter::initialize() {
 //      line.setVertices(vertices, sizeof(float) * 4);
 }
 
-void Painter::drawTexture(const glm::mat4& mat, Texture& texture) {
+void Painter::drawTexture(const glm::mat4& mat, const Texture& texture) {
+  glBindVertexArray(textureVertexArray);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, textureElementBuffer);
+  
+  glm::mat4 projection = glm::ortho(0.0f, screen->w, screen->h, 0.0f, -5.0f, 5.0f);
+  glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(-camera->x, -camera->y, 0));
+  auto mvp = projection * view * mat;
+  
+  textureShader.begin();
+  textureShader.set("mat", glm::value_ptr(mvp));
+  
+  texture.begin();
+  glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+  drawCalls++;
+  texture.end();
+  
+  glBindVertexArray(0);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+  textureShader.end();
+}
+
+void Painter::drawSubTexture(const glm::mat4& mat, const glm::vec2& from, const glm::vec2& to, const Texture& texture) {
   glBindVertexArray(textureVertexArray);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, textureElementBuffer);
   
@@ -224,7 +243,7 @@ void Painter::drawTexture(const glm::mat4& mat) {
   drawTexture(mat, debugTexture);
 }
 
-void Painter::drawLine(Vector2 from, Vector2 to) {
+void Painter::drawLine(const Vector2& from, const Vector2& to) {
   
   glm::mat4 projection = glm::ortho(0.0f, screen->w, screen->h, 0.0f, -5.0f, 5.0f);
   glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(-camera->x, -camera->y, 0));
@@ -256,10 +275,10 @@ void Painter::cleanup() {
   textureShader.release();
 }
 
-void Painter::drawRectangle(Vector2 from = {0, 0}, Vector2 size = {1, 1}) {
+void Painter::drawRectangle(const Vector2& from, const Vector2& size) {
 }
 
-void Painter::fillRectangle(Vector2 from = {0, 0}, Vector2 size = {1, 1}, Color color = {255, 0, 0, 255}) {
+void Painter::fillRectangle(const Vector2& from, const Vector2& size, const Color& color) {
   glBindVertexArray(coloredQuadVertexArray);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, coloredQuadElementBuffer);
   
@@ -286,4 +305,8 @@ unsigned int Painter::getDrawCalls() {
   auto tempDrawCalls = drawCalls;
   drawCalls = 0;
   return tempDrawCalls;
+}
+
+void Painter::drawText(Text& text, const Vector2& position) {
+
 }

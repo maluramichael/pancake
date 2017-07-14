@@ -23,7 +23,7 @@ private:
   stbtt_bakedchar cdata[96]; // ASCII 32..126 is 95 glyphs
 
 public:
-  bool load();
+  bool load(int textureSize);
   
   Texture& getTexture();
   

@@ -38,9 +38,9 @@ public:
   
   const std::string& getFilename() const;
   
-  void begin();
+  void begin() const;
   
-  void end();
+  void end() const;
   
   void generate();
 };

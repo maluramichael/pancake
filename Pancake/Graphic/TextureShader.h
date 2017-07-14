@@ -12,17 +12,21 @@ public:
     vertexShaderSource = "#version 150\n"
       "\n"
       "uniform mat4 mat;\n"
+      "uniform vec4 sub;\n"
       "in vec3 position;\n"
       "in vec2 textureCoordinate;\n"
       "out vec2 _textureCoordinate;\n"
+      "out vec4 _sub;\n"
       "\n"
       "void main()\n"
       "{\n"
       "    _textureCoordinate = textureCoordinate;\n"
+      "    _sub = sub;\n"
       "    gl_Position = mat * vec4(position, 1.0);\n"
       "}";
     fragmentShaderSource = "#version 150\n"
       "\n"
+      "in vec4 _sub;\n"
       "in vec2 _textureCoordinate;\n"
       "out vec4 outColor;\n"
       "uniform sampler2D tex;\n"
@@ -33,7 +37,7 @@ public:
       "}";
     
     load();
-    loadUniforms(std::vector<std::string>{"mat"});
+    loadUniforms(std::vector<std::string>{"mat", "sub"});
     begin();
     
     auto vertexArray = createVertexArray();
@@ -59,7 +63,7 @@ public:
   }
   
   void destroy() {
-      release();
+    release();
   }
 };
 

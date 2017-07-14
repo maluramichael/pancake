@@ -57,11 +57,11 @@ void Texture::release() {
   if (id != 0) { glDeleteTextures(1, &id); }
 }
 
-void Texture::begin() {
+void Texture::begin() const {
   glBindTexture(GL_TEXTURE_2D, id);
 }
 
-void Texture::end() {
+void Texture::end() const {
   glBindTexture(GL_TEXTURE_2D, 0);
 }
 
