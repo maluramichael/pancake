@@ -16,9 +16,19 @@ bool Font::load(int textureSize = 512) {
   file.read(reinterpret_cast<char*>(buffer), size);
   file.close();
   
+  stbtt_bakedchar* cdata = new stbtt_bakedchar[96]; // ASCII 32..126 is 95 glyphs
+  
   unsigned char temp_bitmap[textureSize * textureSize];
   auto result = stbtt_BakeFontBitmap(buffer, 0, 32.0, temp_bitmap, textureSize, textureSize, 32, 96, cdata); // no guarantee this fits!
   
+  float x, y;
+  for(int i = 32; i<126; i++){
+    stbtt_aligned_quad q;
+    stbtt_GetBakedQuad(cdata, textureSize, textureSize, (char)i, &x, &y, &q, 1);//1=opengl & d3d10+,0=d3d9
+    glyphs[(char)i] = q;
+  }
+  
+  delete[] cdata;
   delete[] buffer;
   texture.generate();
   texture.begin();
@@ -31,3 +41,4 @@ bool Font::load(int textureSize = 512) {
 Texture& Font::getTexture() {
   return texture;
 }
+

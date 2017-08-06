@@ -7,13 +7,13 @@
 
 class Mesh {
 private:
-  unsigned int vertexCount = 0, indexCount = 0;
+  //unsigned int vertexCount = 0, indexCount = 0;
   
-  Shader shader;
+  //Shader shader;
   
-  GLuint elementBuffer, vertexArray;
+  //GLuint elementBuffer, vertexArray;
   
-  Texture texture;
+  //Texture texture;
   
   bool hasTexture = false;
   

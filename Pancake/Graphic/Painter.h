@@ -22,6 +22,7 @@
 #include "OpenGL.h"
 #include "Shader.h"
 #include "TextureShader.h"
+#include "SubTextureShader.h"
 #include "Mesh.h"
 #include "Text.h"
 
@@ -36,7 +37,9 @@ private:
   /**
    *
    */
-  TextureShader textureShader;
+  //TextureShader textureShader;
+  
+  SubTextureShader* subTextureShader = nullptr;
   
   /**
    *
@@ -61,55 +64,55 @@ private:
   /**
    *
    */
-  Shader coloredQuadShader;
+  //Shader coloredQuadShader;
   
   /**
    *
    */
-  GLuint coloredQuadElementBuffer, coloredQuadVertexArray;
+  //GLuint coloredQuadElementBuffer, coloredQuadVertexArray;
   
   /**
    *
    */
-  Texture coloredQuad;
+  //Texture coloredQuad;
   
   /**
    *
    */
-  std::vector<VertexPosition> coloredQuadVertices = {
-    {0, 1}, // top let
-    {1, 1}, // top right
-    {1, 0}, // bottom right
-    {0, 0}  // bottom let
-  };
+  //std::vector<VertexPosition> coloredQuadVertices = {
+  //  {0, 1}, // top let
+  //  {1, 1}, // top right
+  //  {1, 0}, // bottom right
+  //  {0, 0}  // bottom let
+  //};
   
   /**
    *
    */
-  Shader lineShader;
+  //Shader lineShader;
   
   /**
    *
    */
-  GLuint lineVertexArray, lineVertexBuffer;
+  //GLuint lineVertexArray, lineVertexBuffer;
   
   /**
    * 
    */
-  float lineVertices[4] = {0, 0, 0.5f, 0.5f};
+  //float lineVertices[4] = {0, 0, 0.5f, 0.5f};
   
   Rect* camera;
   
   Rect* screen;
   
-  void initializeColoredQuad();
+  //void initializeColoredQuad();
   
   void initalizeTexturedQuad();
   
-  void initalizeLine();
+  //void initalizeLine();
 
 public:
-  Painter();
+  Painter() = default;
   
   Painter(Rect& camera, Rect& screen);
   
@@ -124,7 +127,7 @@ public:
    */
   void drawTexture(const glm::mat4& mat, const Texture& texture);
   
-  void drawSubTexture(const glm::mat4& mat, const glm::vec2& from, const glm::vec2& to, const Texture& texture);
+  void drawSubTexture(const glm::vec2& position, const glm::vec2& scale, const glm::vec2& from, const glm::vec2& to, const Texture& texture);
   
   /**
    *
@@ -157,6 +160,8 @@ public:
   void drawText(Text& text, const Vector2& position);
   
   unsigned int getDrawCalls();
+  
+  void reloadShader();
 };
 
 #endif

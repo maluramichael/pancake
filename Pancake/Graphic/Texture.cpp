@@ -47,8 +47,7 @@ Texture Texture::loadTexture(const std::string& file) {
   return texture;
 }
 
-Texture::Texture() {
-}
+Texture::Texture() = default;
 
 Texture::Texture(GLuint id) : id(id) {
 }

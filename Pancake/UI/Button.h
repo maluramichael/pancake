@@ -17,7 +17,7 @@ public:
     this->size = {w, h, 1};
   }
   
-  void render(Painter& painter) {
+  void render(Painter& painter) override {
     if (hovered) {
       painter.fillRectangle({this->position.x, this->position.y}, {this->size.x, this->size.y}, {255, 255, 255, 255});
     } else {

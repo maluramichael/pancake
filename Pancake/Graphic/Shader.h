@@ -2,9 +2,12 @@
 #define PANCAKE_SHADER
 
 #include <GL/glew.h>
+#include <utility>
 #include <vector>
 #include <iostream>
 #include <map>
+#include <glm/vec2.hpp>
+#include <Pancake/Game/File.h>
 
 #include "../Math/Matrix.h"
 #include "../Math/Vector2.h"
@@ -14,11 +17,12 @@ protected:
   
   typedef std::vector<GLuint> ShaderList;
   
-  GLuint loadShader(GLenum type, std::string source) {
+  GLuint loadShader(GLenum type, const std::string& source) {
     GLuint shader = glCreateShader(type);
+    
     const char* c = source.c_str();
     
-    glShaderSource(shader, 1, &c, NULL);
+    glShaderSource(shader, 1, &c, nullptr);
     glCompileShader(shader);
     
     GLint status;
@@ -26,17 +30,13 @@ protected:
     
     if (status != GL_TRUE) {
       char buffer[512];
-      glGetShaderInfoLog(shader, 512, NULL, buffer);
-      std::cout << buffer << '\n';
+      glGetShaderInfoLog(shader, 512, nullptr, buffer);
+      std::cout << (type == GL_VERTEX_SHADER ? "VertexShader" : "FragmentShader") << " " << buffer << '\n';
       return 0;
     }
     
     return shader;
   }
-  
-  GLuint loadFragmentShader(std::string source) { return loadShader(GL_FRAGMENT_SHADER, source); }
-  
-  GLuint loadVertexShader(std::string source) { return loadShader(GL_VERTEX_SHADER, source); }
   
   GLuint createProgram(ShaderList shaders) {
     GLuint program = glCreateProgram();
@@ -51,52 +51,71 @@ protected:
     return glGetUniformLocation(shaderProgram, name.c_str());
   }
   
+  virtual void initialize() {};
+  
   GLuint vertexShader = 0;
   
   GLuint fragmentShader = 0;
   
   GLuint shaderProgram = 0;
   
-  std::string vertexShaderSource;
-  
-  std::string fragmentShaderSource;
   
   std::map<std::string, GLuint> uniforms;
+  
+  File vertexShaderFile;
+  
+  File fragmentShaderFile;
 
 public:
-  Shader() {}
+  GLuint vertexArray = 0;
+
+  Shader() = default;;
   
-  Shader(std::string vertexShader, std::string fragmentShader) : vertexShaderSource(vertexShader),
-                                                                 fragmentShaderSource(fragmentShader) {
+  Shader(File vertexShaderFile, File fragmentShaderFile) : vertexShaderFile(std::move(vertexShaderFile)), fragmentShaderFile(std::move(fragmentShaderFile)) {
   }
   
   void release() {
-    if (vertexShader != 0) { glDeleteShader(vertexShader); }
-    if (fragmentShader != 0) { glDeleteShader(fragmentShader); }
-    if (shaderProgram != 0) { glDeleteProgram(shaderProgram); }
-  }
-  
-  void setVertexShaderSource(std::string vertexShaderSource) {
-    this->vertexShaderSource = vertexShaderSource;
-  }
-  
-  void setFragmentShaderSource(std::string fragmentShaderSource) {
-    this->fragmentShaderSource = fragmentShaderSource;
+    if (vertexShader != 0) {
+      glDeleteShader(vertexShader);
+      vertexShader = 0;
+    }
+    if (fragmentShader != 0) {
+      glDeleteShader(fragmentShader);
+      fragmentShader = 0;
+    }
+    if (shaderProgram != 0) {
+      glDeleteProgram(shaderProgram);
+      shaderProgram = 0;
+    }
+    if (vertexArray != 0) {
+      glDeleteVertexArrays(1, &vertexArray);
+      vertexArray = 0;
+    }
   }
   
   bool load() {
-    vertexShader = loadVertexShader(vertexShaderSource);
-    fragmentShader = loadFragmentShader(fragmentShaderSource);
+    std::string vertexShaderSource = vertexShaderFile.readAll();
+    std::string fragmentShaderSource = fragmentShaderFile.readAll();
+    
+    vertexShader = loadShader(GL_VERTEX_SHADER, vertexShaderSource);
+    fragmentShader = loadShader(GL_FRAGMENT_SHADER, fragmentShaderSource);
     shaderProgram = createProgram(ShaderList{vertexShader, fragmentShader});
     
     return true;
   }
   
+  bool reload() {
+    release();
+    return load();
+  }
+  
   void begin() const {
     glUseProgram(shaderProgram);
+    //glBindVertexArray(vertexArray);
   }
   
   void end() const {
+    //glBindVertexArray(0);
     glUseProgram(0);
   }
   
@@ -119,6 +138,10 @@ public:
     glUniform2f(uniforms[name], x, y);
   }
   
+  void set(std::string name, const glm::vec2& vec) {
+    glUniform2f(uniforms[name], vec.x, vec.y);
+  }
+  
   void set(std::string name, float x, float y, float z) {
     glUniform3f(uniforms[name], x, y, z);
   }
@@ -138,6 +161,10 @@ public:
   GLuint getProgram() const {
     return shaderProgram;
   }
+  
+  std::string vertexShaderSource;
+  
+  std::string fragmentShaderSource;
 };
 
 #endif //PANCAKE_SHADER

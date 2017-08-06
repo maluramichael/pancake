@@ -9,6 +9,10 @@ protected:
   bool hovered = false;
 
 public:
+  virtual ~Widget() {
+  
+  }
+  
   virtual void processEvent(SDL_Event* event) {
     if (event->type == SDL_MOUSEMOTION) {
       int x = event->motion.x;

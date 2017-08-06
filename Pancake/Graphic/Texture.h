@@ -11,13 +11,13 @@
 
 class Texture {
 private:
-  std::string filename = "";
-  
   GLuint id = 0;
-  
-  Vector2 dimensions;
 
 public:
+  std::string filename = "";
+
+  Vector2 dimensions;
+
   static Texture loadTexture(const std::string& file);
   
   Texture();
